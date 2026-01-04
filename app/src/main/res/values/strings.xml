@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">ExpenseTracker</string>
+    <string name="welcome_to">Welcome to</string>
+    <string name="description">A place where you can track all your\nexpenses and incomes...</string>
+    <string name="let_s_get_started">Let’s Get Started…</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="continue_with_email">Continue with Email</string>
+    <string name="already_have_an_account">Already have an account? </string>
+    <string name="login">Login</string>
+    <string name="login_title">Welcome Back</string>
+    <string name="login_subtitle">Please enter your details to login.</string>
+    <string name="email_hint">Email Address</string>
+    <string name="password_hint">Password</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="dont_have_account">Don’t have an account? </string>
+    <string name="register">Register</string>
+    <string name="register_title">Create Account</string>
+    <string name="register_subtitle">Fill in the details to get started.</string>
+    <string name="name_hint">Full Name</string>
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet consectetur.\nLorem id sit</string>
+    <string name="continue_text">Continue</string>
+    <string name="sign_in">Sign in</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="remember_me">Remember Me</string>
+    <string name="sign_up">Sign up</string>
+</resources>

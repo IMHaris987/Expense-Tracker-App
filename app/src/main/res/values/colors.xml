@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary_text">#1A1A1A</color>
+    <color name="secondary_text">#4A4A4A</color>
+    <color name="accent_blue">#5E5CE6</color>
+    <color name="button_border">#1A1A1A</color>
+    <color name="logo_background">#E8E8FF</color>
+    <color name="dot_inactive">#CCCCCC</color>
+    <color name="dot_active">#2196F3</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="blue_wave">#2196F3</color>
+    <color name="pink_button">#FF9E9E</color>
+    <color name="pink_text">#FF9E9E</color>
+    <color name="gray_text">#757575</color>
+</resources>
