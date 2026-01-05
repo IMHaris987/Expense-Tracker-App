@@ -60,6 +60,7 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0")
 
     implementation(platform("com.google.firebase:firebase-bom:34.7.0"))
     implementation("com.google.firebase:firebase-auth:23.1.0")
@@ -67,4 +68,7 @@ dependencies {
 
     implementation("androidx.viewpager2:viewpager2:1.1.0")
     implementation("com.google.android.material:material:1.13.0")
+
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
 }

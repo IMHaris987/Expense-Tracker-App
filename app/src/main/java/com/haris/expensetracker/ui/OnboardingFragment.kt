@@ -14,8 +14,8 @@ class OnboardingFragment : Fragment(R.layout.fragment_onboarding) {
         super.onViewCreated(view, savedInstanceState)
 
         val image = view.findViewById<ImageView>(R.id.imageView)
-        val title = view.findViewById<TextView>(R.id.tvTitle)
-        val desc = view.findViewById<TextView>(R.id.tvDescription)
+        val title = view.findViewById<TextView>(R.id.textview_title)
+        val desc = view.findViewById<TextView>(R.id.textview_description)
 
         arguments?.let {
             title.text = it.getString("title")
