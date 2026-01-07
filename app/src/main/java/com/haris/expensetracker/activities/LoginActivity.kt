@@ -8,9 +8,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.haris.expensetracker.data.repository.AuthRepository
 import com.haris.expensetracker.databinding.ActivityLoginBinding
-import com.haris.expensetracker.ui.viewmodel.LoginState
-import com.haris.expensetracker.ui.viewmodel.LoginViewModel
-import com.haris.expensetracker.ui.viewmodel.LoginViewModelFactory
+import com.haris.expensetracker.ui.login.LoginState
+import com.haris.expensetracker.ui.login.LoginViewModel
+import com.haris.expensetracker.ui.login.LoginViewModelFactory
 
 class LoginActivity : AppCompatActivity() {
 

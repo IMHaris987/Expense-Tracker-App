@@ -1,4 +1,4 @@
-package com.haris.expensetracker.ui.viewmodel
+package com.haris.expensetracker.ui.forgotpassword
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -28,10 +28,10 @@ class ForgotPasswordViewModel(private val repository: AuthRepository) : ViewMode
         viewModelScope.launch {
             when (val result = repository.passwordForgot(email)) {
                 is Result.Success -> {
-                    _forgetPasswordState.postValue(ForgotPassword.Success)
+                    _forgetPasswordState.value = ForgotPassword.Success
                 }
                 is Result.Failure -> {
-                    _forgetPasswordState.postValue(ForgotPassword.Error(result.exception.message))
+                    _forgetPasswordState.value = ForgotPassword.Error(result.exception.message)
                 }
             }
         }

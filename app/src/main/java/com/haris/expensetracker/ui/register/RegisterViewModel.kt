@@ -1,4 +1,4 @@
-package com.haris.expensetracker.ui.viewmodel
+package com.haris.expensetracker.ui.register
 
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.LiveData
@@ -29,13 +29,13 @@ class RegisterViewModel(private val repository: AuthRepository) : ViewModel() {
         viewModelScope.launch {
             // 6. Call the suspending function on the Repository
             when (val result = repository.register(name, email, password)) {
-                is com.haris.expensetracker.data.repository.Result.Success -> {
+                is Result.Success -> {
                     // 7. Post the success result to LiveData
-                    _registerState.postValue(RegisterState.Success(result.data))
+                    _registerState.value = RegisterState.Success(result.data)
                 }
                 is Result.Failure -> {
                     // 8. Post the error result to LiveData
-                    _registerState.postValue(RegisterState.Failure(result.exception.message))
+                    _registerState.value = RegisterState.Failure(result.exception.message)
                 }
             }
         }

@@ -8,9 +8,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.haris.expensetracker.data.repository.AuthRepository
 import com.haris.expensetracker.databinding.ActivityRegisterBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.haris.expensetracker.ui.viewmodel.RegisterState
-import com.haris.expensetracker.ui.viewmodel.RegisterViewModel
-import com.haris.expensetracker.ui.viewmodel.RegisterViewModelFactory
+import com.haris.expensetracker.ui.register.RegisterState
+import com.haris.expensetracker.ui.register.RegisterViewModel
+import com.haris.expensetracker.ui.register.RegisterViewModelFactory
 
 class RegisterActivity : AppCompatActivity() {
 

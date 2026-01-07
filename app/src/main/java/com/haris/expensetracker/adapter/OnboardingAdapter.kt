@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.haris.expensetracker.model.OnboardingItem
-import com.haris.expensetracker.ui.OnboardingFragment
+import com.haris.expensetracker.ui.onboarding.OnboardingFragment
 
 class OnboardingAdapter(
     fragmentActivity: FragmentActivity,

@@ -1,4 +1,4 @@
-package com.haris.expensetracker.ui.viewmodel
+package com.haris.expensetracker.ui.login
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -33,11 +33,11 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
             when (val result = repository.login(email, password)) {
                 is Result.Success -> {
                     // 7. Post the success result to LiveData
-                    _loginState.postValue(LoginState.Success(result.data))
+                    _loginState.value = LoginState.Success(result.data)
                 }
                 is Result.Failure -> {
                     // 8. Post the error result to LiveData
-                    _loginState.postValue(LoginState.Error(result.exception.message))
+                    _loginState.value = LoginState.Error(result.exception.message)
                 }
             }
         }

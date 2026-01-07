@@ -8,9 +8,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.haris.expensetracker.data.repository.AuthRepository
 import com.haris.expensetracker.databinding.ActivityForgotPasswordBinding
-import com.haris.expensetracker.ui.viewmodel.ForgotPassword
-import com.haris.expensetracker.ui.viewmodel.ForgotPasswordViewModel
-import com.haris.expensetracker.ui.viewmodel.ForgotPasswordViewModelFactory
+import com.haris.expensetracker.ui.forgotpassword.ForgotPassword
+import com.haris.expensetracker.ui.forgotpassword.ForgotPasswordViewModel
+import com.haris.expensetracker.ui.forgotpassword.ForgotPasswordViewModelFactory
 
 class ForgotPasswordActivity : AppCompatActivity() {
 

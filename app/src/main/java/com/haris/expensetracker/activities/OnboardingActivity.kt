@@ -2,21 +2,18 @@ package com.haris.expensetracker.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.haris.expensetracker.R
 import com.haris.expensetracker.adapter.OnboardingAdapter
+import com.haris.expensetracker.databinding.ActivityOnboardingBinding
 import com.haris.expensetracker.model.OnboardingItem
 
 class OnboardingActivity : AppCompatActivity() {
 
-    private lateinit var viewPager: ViewPager2
-    private lateinit var btnNext: Button
-    private lateinit var dotsLayout: LinearLayout
+    private lateinit var binding: ActivityOnboardingBinding
     private lateinit var adapter: OnboardingAdapter
 
     private val items = listOf(
@@ -46,20 +43,19 @@ class OnboardingActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_onboarding)
 
-        viewPager = findViewById(R.id.viewPager)
-        btnNext = findViewById(R.id.btnNext)
-        dotsLayout = findViewById(R.id.dotsLayout)
+        binding = ActivityOnboardingBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         adapter = OnboardingAdapter(this, items)
-        viewPager.adapter = adapter
+        binding.viewPager.adapter = adapter
 
         setupDots()
         animateDot(currentDotIndex, true)
 
-        // Update dots when page changes
-        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        // Page change listener
+        binding.viewPager.registerOnPageChangeCallback(object :
+            ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 animateDot(currentDotIndex, false)
                 animateDot(position, true)
@@ -67,8 +63,9 @@ class OnboardingActivity : AppCompatActivity() {
             }
         })
 
-        btnNext.setOnClickListener {
-            getSharedPreferences("onboarding", MODE_PRIVATE).edit()
+        binding.btnNext.setOnClickListener {
+            getSharedPreferences("onboarding", MODE_PRIVATE)
+                .edit()
                 .putBoolean("completed", true)
                 .apply()
 
@@ -78,19 +75,27 @@ class OnboardingActivity : AppCompatActivity() {
     }
 
     private fun setupDots() {
-        val dots = Array(items.size) { TextView(this) }
-        dotsLayout.removeAllViews()
-        for (i in dots.indices) {
-            dots[i].text = "•"
-            dots[i].textSize = 50f // big dots
-            dots[i].setTextColor(ContextCompat.getColor(this, R.color.dot_inactive))
-            dotsLayout.addView(dots[i])
+        binding.dotsLayout.removeAllViews()
+
+        repeat(items.size) {
+            val dot = TextView(this).apply {
+                text = "•"
+                textSize = 50f
+                setTextColor(
+                    ContextCompat.getColor(
+                        this@OnboardingActivity,
+                        R.color.dot_inactive
+                    )
+                )
+            }
+            binding.dotsLayout.addView(dot)
         }
     }
 
     private fun animateDot(index: Int, active: Boolean) {
-        if (index < 0 || index >= dotsLayout.childCount) return
-        val dot = dotsLayout.getChildAt(index) as TextView
+        if (index !in 0 until binding.dotsLayout.childCount) return
+
+        val dot = binding.dotsLayout.getChildAt(index) as TextView
 
         val scale = if (active) 1.2f else 1f
         val alpha = if (active) 1f else 0.6f
