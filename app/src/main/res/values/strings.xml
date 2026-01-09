@@ -1,23 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- App Name -->
     <string name="app_name">ExpenseTracker</string>
+
+    <!-- Welcome/Onboarding Strings -->
     <string name="welcome_to">Welcome to</string>
     <string name="description">A place where you can track all your\nexpenses and incomes...</string>
-    <string name="let_s_get_started">Let’s Get Started…</string>
+    <string name="let_s_get_started">Let\'s Get Started…</string>
     <string name="continue_with_google">Continue with Google</string>
     <string name="continue_with_email">Continue with Email</string>
     <string name="already_have_an_account">Already have an account? </string>
     <string name="login">Login</string>
+
+    <!-- Login Screen Strings -->
     <string name="login_title">Welcome Back</string>
     <string name="login_subtitle">Please enter your details to login.</string>
     <string name="email_hint">Email Address</string>
     <string name="password_hint">Password</string>
     <string name="forgot_password">Forgot Password?</string>
-    <string name="dont_have_account">Don’t have an account? </string>
+    <string name="dont_have_account">Don\'t have an account? </string>
     <string name="register">Register</string>
+
+    <!-- Registration Screen Strings -->
     <string name="register_title">Create Account</string>
     <string name="register_subtitle">Fill in the details to get started.</string>
     <string name="name_hint">Full Name</string>
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet consectetur.\nLorem id sit</string>
+
+    <!-- Common Strings -->
     <string name="continue_text">Continue</string>
     <string name="sign_in">Sign in</string>
     <string name="email">Email</string>
@@ -27,4 +37,44 @@
     <string name="budget_goals"><![CDATA[Budget & Goals]]></string>
     <string name="drawer_open">Open menu</string>
     <string name="drawer_close">Close menu</string>
+
+    <!-- New Budget Activity Strings -->
+    <string name="new_budget">New budget</string>
+    <string name="close">Close</string>
+    <string name="confirm">Confirm</string>
+
+    <!-- Form Labels -->
+    <string name="name">Name</string>
+    <string name="budget_name_hint">Enter budget name</string>
+
+    <string name="period">Period</string>
+    <string name="period_none">None</string>
+    <string name="period_weekly">Weekly</string>
+    <string name="period_monthly">Monthly</string>
+    <string name="period_yearly">Yearly</string>
+
+    <string name="amount">Amount</string>
+    <string name="amount_hint">0</string>
+
+    <string name="currency">Currency</string>
+    <string name="currency_pkr">PKR</string>
+    <string name="currency_usd">USD</string>
+    <string name="currency_eur">EUR</string>
+
+    <string name="categories">Categories</string>
+    <string name="categories_all">All</string>
+
+    <string name="account">Account</string>
+    <string name="account_all">All</string>
+
+    <string name="labels">Labels</string>
+    <string name="add_label">+ Add label</string>
+
+    <!-- Notifications Section -->
+    <string name="notifications">NOTIFICATIONS</string>
+    <string name="budget_overspent">Budget overspent</string>
+    <string name="notify_exceeded">Notify when amount has exceeded the budget</string>
+
+    <string name="risk_overspending">Risk of overspending</string>
+    <string name="notify_trending">Notify when budget is trending to be overspent</string>
 </resources>

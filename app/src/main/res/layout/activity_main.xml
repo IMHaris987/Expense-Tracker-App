@@ -21,7 +21,7 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="90dp"
                 app:title="Home"
                 app:titleTextColor="#FFFFFF" />
 
@@ -47,393 +47,291 @@
             </com.google.android.material.tabs.TabLayout>
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.core.widget.NestedScrollView
+        <!-- Container that holds both accounts content and fragment -->
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <LinearLayout
+            <!-- Accounts Tab Content -->
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/accountsContent"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:layout_height="match_parent">
 
-                <!-- List of Accounts Section -->
-                <androidx.cardview.widget.CardView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp">
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-                    <LinearLayout
+                    <!-- List of Accounts Section -->
+                    <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
+                        android:layout_marginBottom="16dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="2dp">
 
-                        <!-- Header -->
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="16dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:layout_centerVertical="true"
-                                android:text="List of accounts"
-                                android:textColor="#000000"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
-
-                            <ImageView
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:layout_alignParentEnd="true"
-                                android:layout_centerVertical="true"
-                                android:padding="4dp"
-                                android:src="@drawable/ic_settings"
-                                app:tint="@color/dot_active" />
-                        </RelativeLayout>
-
-                        <!-- Account Cards -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="12dp"
-                            android:orientation="horizontal"
-                            android:weightSum="2">
+                            android:orientation="vertical"
+                            android:padding="16dp">
 
-                            <!-- Cash Account -->
-                            <androidx.cardview.widget.CardView
-                                android:layout_width="0dp"
+                            <!-- Header -->
+                            <RelativeLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginEnd="8dp"
-                                android:layout_weight="1"
-                                app:cardBackgroundColor="#2196F3"
-                                app:cardCornerRadius="8dp"
-                                app:cardElevation="0dp">
+                                android:layout_marginBottom="16dp">
 
-                                <LinearLayout
-                                    android:layout_width="match_parent"
+                                <TextView
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:orientation="vertical"
-                                    android:padding="16dp">
+                                    android:layout_alignParentStart="true"
+                                    android:layout_centerVertical="true"
+                                    android:text="List of accounts"
+                                    android:textColor="#000000"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
 
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Cash"
-                                        android:textColor="#FFFFFF"
-                                        android:textSize="16sp" />
+                                <ImageView
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_centerVertical="true"
+                                    android:padding="4dp"
+                                    android:src="@drawable/ic_settings"
+                                    app:tint="@color/dot_active" />
+                            </RelativeLayout>
 
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="PKR 1,000.00"
-                                        android:textColor="#FFFFFF"
-                                        android:textSize="18sp"
-                                        android:textStyle="bold" />
-                                </LinearLayout>
-                            </androidx.cardview.widget.CardView>
-
-                            <!-- Add Account -->
-                            <androidx.cardview.widget.CardView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:layout_weight="1"
-                                app:cardBackgroundColor="#FFFFFF"
-                                app:cardCornerRadius="8dp"
-                                app:cardElevation="0dp"
-                                app:strokeColor="#2196F3"
-                                app:strokeWidth="2dp">
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:gravity="center"
-                                    android:orientation="horizontal"
-                                    android:padding="16dp">
-
-                                    <TextView
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="1"
-                                        android:text="Add account"
-                                        android:textColor="#2196F3"
-                                        android:textSize="16sp"
-                                        android:textStyle="bold" />
-
-                                    <ImageView
-                                        android:layout_width="24dp"
-                                        android:layout_height="24dp"
-                                        android:src="@android:drawable/ic_input_add"
-                                        app:tint="#2196F3" />
-                                </LinearLayout>
-                            </androidx.cardview.widget.CardView>
-                        </LinearLayout>
-
-                        <!-- Account Detail Button -->
-                        <Button
-                            android:id="@+id/buttonAccountDetail"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Account Detail"
-                            android:textColor="#000000"
-                            app:strokeColor="#CCCCCC" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <!-- Track Your Spending Card -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp">
-
-                            <ImageView
-                                android:id="@+id/googlePayIcon"
-                                android:layout_width="48dp"
-                                android:layout_height="48dp"
-                                android:layout_alignParentStart="true"
-                                android:layout_marginEnd="12dp"
-                                android:src="@drawable/ic_google_pay" />
-
+                            <!-- Account Cards -->
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_toEndOf="@id/googlePayIcon"
-                                android:layout_toStartOf="@id/closeButton"
-                                android:orientation="vertical">
+                                android:layout_marginBottom="12dp"
+                                android:orientation="horizontal"
+                                android:weightSum="2">
 
-                                <TextView
-                                    android:layout_width="wrap_content"
+                                <!-- Cash Account -->
+                                <androidx.cardview.widget.CardView
+                                    android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:text="Track your spending"
-                                    android:textColor="#000000"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
+                                    android:layout_marginEnd="8dp"
+                                    android:layout_weight="1"
+                                    app:cardBackgroundColor="#2196F3"
+                                    app:cardCornerRadius="8dp"
+                                    app:cardElevation="0dp">
 
-                                <TextView
-                                    android:layout_width="wrap_content"
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical"
+                                        android:padding="16dp">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Cash"
+                                            android:textColor="#FFFFFF"
+                                            android:textSize="16sp" />
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="PKR 1,000.00"
+                                            android:textColor="#FFFFFF"
+                                            android:textSize="18sp"
+                                            android:textStyle="bold" />
+                                    </LinearLayout>
+                                </androidx.cardview.widget.CardView>
+
+                                <!-- Add Account -->
+                                <androidx.cardview.widget.CardView
+                                    android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:text="Set up automatic tracking for your Google Pay purchases."
-                                    android:textColor="#666666"
-                                    android:textSize="14sp" />
+                                    android:layout_marginStart="8dp"
+                                    android:layout_weight="1"
+                                    app:cardBackgroundColor="#FFFFFF"
+                                    app:cardCornerRadius="8dp"
+                                    app:cardElevation="0dp"
+                                    app:strokeColor="#2196F3"
+                                    app:strokeWidth="2dp">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:gravity="center"
+                                        android:orientation="horizontal"
+                                        android:padding="16dp">
+
+                                        <TextView
+                                            android:layout_width="0dp"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:text="Add account"
+                                            android:textColor="#2196F3"
+                                            android:textSize="16sp"
+                                            android:textStyle="bold" />
+
+                                        <ImageView
+                                            android:layout_width="24dp"
+                                            android:layout_height="24dp"
+                                            android:src="@android:drawable/ic_input_add"
+                                            app:tint="#2196F3" />
+                                    </LinearLayout>
+                                </androidx.cardview.widget.CardView>
                             </LinearLayout>
 
-                            <ImageView
-                                android:id="@+id/closeButton"
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:layout_alignParentEnd="true"
-                                android:layout_centerVertical="true"
-                                android:src="@android:drawable/ic_menu_close_clear_cancel"
-                                app:tint="#999999" />
-                        </RelativeLayout>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Start set up"
-                            android:textColor="#2196F3"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <!-- Expenses Structure Section -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp">
-
-                            <TextView
+                            <!-- Account Detail Button -->
+                            <Button
+                                android:id="@+id/buttonAccountDetail"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:layout_centerVertical="true"
-                                android:text="Expenses structure"
+                                android:text="Account Detail"
                                 android:textColor="#000000"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
+                                app:strokeColor="#CCCCCC" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
 
-                            <ImageView
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:layout_alignParentEnd="true"
-                                android:layout_centerVertical="true"
-                                android:src="@drawable/ic_more_vert"
-                                app:tint="#999999" />
-                        </RelativeLayout>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="4dp"
-                            android:text="LAST 30 DAYS"
-                            android:textColor="#999999"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="PKR 0"
-                            android:textColor="#000000"
-                            android:textSize="32sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <!-- Balance Trend Section (for second tab) -->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/card_balance_trend"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:visibility="gone"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp">
-
-                    <LinearLayout
+                    <!-- Track Your Spending Card -->
+                    <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="16dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:layout_centerVertical="true"
-                                android:text="Balance Trend"
-                                android:textColor="#000000"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
-
-                            <ImageView
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:layout_alignParentEnd="true"
-                                android:layout_centerVertical="true"
-                                android:src="@drawable/ic_more_vert"
-                                app:tint="#999999" />
-                        </RelativeLayout>
+                        android:layout_marginBottom="16dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="2dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="16dp"
-                            android:orientation="horizontal">
+                            android:orientation="vertical"
+                            android:padding="16dp">
 
-                            <LinearLayout
-                                android:layout_width="0dp"
+                            <RelativeLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
+                                android:layout_marginBottom="8dp">
 
-                                <TextView
-                                    android:layout_width="wrap_content"
+                                <ImageView
+                                    android:id="@+id/googlePayIcon"
+                                    android:layout_width="48dp"
+                                    android:layout_height="48dp"
+                                    android:layout_alignParentStart="true"
+                                    android:layout_marginEnd="12dp"
+                                    android:src="@drawable/ic_google_pay" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="TODAY"
-                                    android:textColor="#999999"
-                                    android:textSize="12sp" />
+                                    android:layout_centerVertical="true"
+                                    android:layout_toEndOf="@id/googlePayIcon"
+                                    android:layout_toStartOf="@id/closeButton"
+                                    android:orientation="vertical">
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="PKR 1,000.00"
-                                    android:textColor="#000000"
-                                    android:textSize="24sp"
-                                    android:textStyle="bold" />
-                            </LinearLayout>
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Track your spending"
+                                        android:textColor="#000000"
+                                        android:textSize="16sp"
+                                        android:textStyle="bold" />
 
-                            <LinearLayout
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Set up automatic tracking for your Google Pay purchases."
+                                        android:textColor="#666666"
+                                        android:textSize="14sp" />
+                                </LinearLayout>
+
+                                <ImageView
+                                    android:id="@+id/closeButton"
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_centerVertical="true"
+                                    android:src="@android:drawable/ic_menu_close_clear_cancel"
+                                    app:tint="#999999" />
+                            </RelativeLayout>
+
+                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:gravity="end"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="vs past period"
-                                    android:textColor="#999999"
-                                    android:textSize="12sp" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="0%"
-                                    android:textColor="#000000"
-                                    android:textSize="24sp"
-                                    android:textStyle="bold" />
-                            </LinearLayout>
+                                android:text="Start set up"
+                                android:textColor="#2196F3"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
                         </LinearLayout>
+                    </androidx.cardview.widget.CardView>
 
-                        <!-- Placeholder for chart -->
-                        <View
+                    <!-- Expenses Structure Section -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="2dp">
+
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="200dp"
-                            android:layout_marginBottom="16dp"
-                            android:background="#F0F0F0" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Add Record"
-                            android:textColor="#2196F3"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                            android:orientation="vertical"
+                            android:padding="16dp">
 
-                <!-- Upcoming Planned Payments -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Upcoming planned payments"
-                    android:textColor="#000000"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentStart="true"
+                                    android:layout_centerVertical="true"
+                                    android:text="Expenses structure"
+                                    android:textColor="#000000"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <ImageView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_centerVertical="true"
+                                    android:src="@drawable/ic_more_vert"
+                                    app:tint="#999999" />
+                            </RelativeLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="4dp"
+                                android:text="LAST 30 DAYS"
+                                android:textColor="#999999"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="PKR 0"
+                                android:textColor="#000000"
+                                android:textSize="32sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+
+            <!-- Fragment Container (Initially hidden) -->
+            <FrameLayout
+                android:id="@+id/fragmentContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
+        </FrameLayout>
 
         <!-- Floating Action Button -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
