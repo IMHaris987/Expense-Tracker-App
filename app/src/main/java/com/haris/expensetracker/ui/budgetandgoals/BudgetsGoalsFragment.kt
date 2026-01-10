@@ -7,6 +7,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.haris.expensetracker.R
+import com.haris.expensetracker.activities.CreateGoalActivity
 import com.haris.expensetracker.activities.CreateNewBudgetActivity
 
 class BudgetsGoalsFragment : Fragment() {
@@ -26,8 +27,8 @@ class BudgetsGoalsFragment : Fragment() {
         }
 
         createGoalButton.setOnClickListener {
+            startActivity(Intent(context, CreateGoalActivity::class.java))
         }
-
         return view
     }
 }

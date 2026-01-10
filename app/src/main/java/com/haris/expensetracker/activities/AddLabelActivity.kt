@@ -2,8 +2,10 @@ package com.haris.expensetracker.activities
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.haris.expensetracker.databinding.ActivityAddLabelBinding
+import com.haris.expensetracker.utils.ConfirmationDialogeHelper
 
 class AddLabelActivity : AppCompatActivity() {
 
@@ -14,9 +16,12 @@ class AddLabelActivity : AppCompatActivity() {
         binding = ActivityAddLabelBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.btnBack.setOnClickListener {
-            finish()
+        val backPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                showExitDialog()
+            }
         }
+        onBackPressedDispatcher.addCallback(this, backPressedCallback)
 
         binding.fabAdd.setOnClickListener {
             startActivity(Intent(this, SelectLabelActivity::class.java))
@@ -27,5 +32,11 @@ class AddLabelActivity : AppCompatActivity() {
     private fun showDataState() {
         binding.emptyStateContainer.visibility = android.view.View.GONE
         binding.recyclerView.visibility = android.view.View.VISIBLE
+    }
+
+    private fun showExitDialog() {
+        ConfirmationDialogeHelper.showConfirmationDialog(this) {
+            finish()
+        }
     }
 }

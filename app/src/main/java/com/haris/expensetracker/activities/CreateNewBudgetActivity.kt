@@ -4,8 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.haris.expensetracker.databinding.ActivityCreateNewBudgetBinding
+import com.haris.expensetracker.utils.ConfirmationDialogeHelper
 
 
 class CreateNewBudgetActivity : AppCompatActivity() {
@@ -23,9 +25,12 @@ class CreateNewBudgetActivity : AppCompatActivity() {
     }
 
     private fun setupToolbar() {
-        binding.btnClose.setOnClickListener {
-            finish()
+        val backPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                showExitDialog()
+            }
         }
+        onBackPressedDispatcher.addCallback(this, backPressedCallback)
 
         binding.btnSave.setOnClickListener {
             saveBudget()
@@ -68,8 +73,13 @@ class CreateNewBudgetActivity : AppCompatActivity() {
             return
         }
 
-        // Logic to save to database goes here
         Toast.makeText(this, "Budget '$name' saved!", Toast.LENGTH_SHORT).show()
         finish()
+    }
+
+    private fun showExitDialog() {
+        ConfirmationDialogeHelper.showConfirmationDialog(this) {
+            finish()
+        }
     }
 }

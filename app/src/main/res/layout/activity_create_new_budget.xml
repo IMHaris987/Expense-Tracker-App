@@ -10,8 +10,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/budget_primary"
+        android:layout_height="90dp"
+        android:background="@color/dot_active"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         app:layout_constraintTop_toTopOf="parent">
@@ -63,19 +63,17 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/input_name"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:hint="Name"
-                app:boxBackgroundMode="none"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/budget_accent"
-                    android:inputType="textCapWords" />
+                    android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout

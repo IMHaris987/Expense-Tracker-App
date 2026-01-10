@@ -9,8 +9,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="#00A978"
+        android:layout_height="90dp"
+        android:background="@color/dot_active"
         android:paddingHorizontal="16dp"
         app:layout_constraintTop_toTopOf="parent">
 
