@@ -6,22 +6,55 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import com.haris.expensetracker.data.repository.FinanaceRepository
 import com.haris.expensetracker.databinding.ActivityCreateNewBudgetBinding
+import com.haris.expensetracker.room.AppDatabase
+import com.haris.expensetracker.ui.budget.BudgetViewModel
+import com.haris.expensetracker.ui.budget.BudgetViewModelFactory
 import com.haris.expensetracker.utils.ConfirmationDialogeHelper
-
 
 class CreateNewBudgetActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCreateNewBudgetBinding
+    private lateinit var viewModel: BudgetViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCreateNewBudgetBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupToolbar()
+        val database = AppDatabase.getDatabase(this)
+        val repository = FinanaceRepository(database.FinanceDao())
+        val factory = BudgetViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, factory)[BudgetViewModel::class.java]
+
+        setupNavigation()
         setupButtons()
         setupDropdowns()
+    }
+
+    private fun setupNavigation() {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                showExitDialog()
+            }
+        })
+
+        binding.btnClose.setOnClickListener { showExitDialog() }
+
+        binding.btnSave.setOnClickListener {
+            val name = binding.inputName.editText?.text.toString()
+            val amount = binding.inputAmount.editText?.text.toString()
+            val period = binding.inputPeriod.editText?.text.toString()
+            val category = binding.inputCategories.editText?.text.toString()
+
+            if (validate(name, amount)) {
+                viewModel.saveBudget(name, amount.toDouble(), period, category)
+                Toast.makeText(this, "Budget Saved Successfully", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+        }
     }
 
     private fun setupToolbar() {
@@ -81,5 +114,25 @@ class CreateNewBudgetActivity : AppCompatActivity() {
         ConfirmationDialogeHelper.showConfirmationDialog(this) {
             finish()
         }
+    }
+
+    private fun validate(name: String, amount: String): Boolean {
+        var isValid = true
+
+        if (name.isBlank()) {
+            binding.inputName.error = "Name is required"
+            isValid = false
+        } else {
+            binding.inputName.error = null
+        }
+
+        if (amount.isBlank()) {
+            binding.inputAmount.error = "Amount is required"
+            isValid = false
+        } else {
+            binding.inputAmount.error = null
+        }
+
+        return isValid
     }
 }

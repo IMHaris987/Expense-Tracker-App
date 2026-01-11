@@ -27,6 +27,10 @@ class CreateGoalActivity : AppCompatActivity() {
         }
         onBackPressedDispatcher.addCallback(this, backPressedCallback)
 
+        binding.btnClose.setOnClickListener {
+            showExitDialog()
+        }
+
         binding.createGoal.setOnClickListener {
             val nameText = binding.name.toString().trim()
             if (nameText.isEmpty()) {
