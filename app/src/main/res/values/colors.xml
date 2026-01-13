@@ -35,4 +35,15 @@
     <color name="budget_text_hint">#9E9E9E</color>
     <color name="budget_divider">#E0E0E0</color>
     <color name="budget_accent">#2196F3</color> <color name="budget_header_bg">#F5F5F5</color>
+
+    <color name="background_gray">#F5F6F8</color>
+
+    <color name="text_primary2">#212121</color>
+    <color name="text_secondary2">#757575</color>
+
+    <color name="button_light_blue">#D1E4F6</color>
+    <color name="button_text_blue">#1967D2</color>
+    <color name="progress_track_gray">#E0E0E0</color>
+    <color name="status_green">#00C853</color>
+    <color name="icon_teal_bg">#26C6DA</color>
 </resources>

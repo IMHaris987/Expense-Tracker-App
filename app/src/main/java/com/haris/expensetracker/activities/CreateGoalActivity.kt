@@ -7,9 +7,9 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.haris.expensetracker.R
-import com.haris.expensetracker.adapter.GoalAdapter
+import com.haris.expensetracker.adapter.GoalIconsAdapter
 import com.haris.expensetracker.databinding.ActivityCreateGoalBinding
-import com.haris.expensetracker.model.GoalCategory
+import com.haris.expensetracker.model.GoalIconsCategory
 import com.haris.expensetracker.utils.ConfirmationDialogeHelper
 
 class CreateGoalActivity : AppCompatActivity() {
@@ -19,6 +19,8 @@ class CreateGoalActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityCreateGoalBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val uid = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
         val backPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -32,7 +34,7 @@ class CreateGoalActivity : AppCompatActivity() {
         }
 
         binding.createGoal.setOnClickListener {
-            val nameText = binding.name.toString().trim()
+            val nameText = binding.name.text.toString().trim()
             if (nameText.isEmpty()) {
                 Toast.makeText(this@CreateGoalActivity , "Name is Required", Toast.LENGTH_SHORT).show()
             } else{
@@ -46,16 +48,16 @@ class CreateGoalActivity : AppCompatActivity() {
         val goalsRecyclerView = binding.rvGoals
 
         val categories = listOf(
-            GoalCategory("New Vehicle", R.drawable.ic_car, "#4DD0E1"),
-            GoalCategory("NEW HOME", R.drawable.ic_home, "#FFB74D"),
-            GoalCategory("HOLIDAY TRIP", R.drawable.ic_trip, "#66BB6A"),
-            GoalCategory("EDUCATION", R.drawable.ic_education, "#42A5F5"),
-            GoalCategory("EMERGENCY FUND", R.drawable.ic_safe, "#BA68C8"),
-            GoalCategory("HEALTH CARE", R.drawable.ic_health, "#EF5350")
+            GoalIconsCategory("New Vehicle", R.drawable.ic_car, "#4DD0E1"),
+            GoalIconsCategory("NEW HOME", R.drawable.ic_home, "#FFB74D"),
+            GoalIconsCategory("HOLIDAY TRIP", R.drawable.ic_trip, "#66BB6A"),
+            GoalIconsCategory("EDUCATION", R.drawable.ic_education, "#42A5F5"),
+            GoalIconsCategory("EMERGENCY FUND", R.drawable.ic_safe, "#BA68C8"),
+            GoalIconsCategory("HEALTH CARE", R.drawable.ic_health, "#EF5350")
         )
 
         goalsRecyclerView.layoutManager = GridLayoutManager(this, 2)
-        goalsRecyclerView.adapter = GoalAdapter(categories)
+        goalsRecyclerView.adapter = GoalIconsAdapter(categories)
     }
 
     private fun showExitDialog() {

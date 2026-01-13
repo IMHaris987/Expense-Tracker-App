@@ -4,7 +4,12 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import com.haris.expensetracker.data.repository.FinanceRepository
 import com.haris.expensetracker.databinding.ActivityAddGoalBinding
+import com.haris.expensetracker.room.AppDatabase
+import com.haris.expensetracker.ui.goal.GoalViewModel
+import com.haris.expensetracker.ui.goal.GoalViewModelFactory
 import com.haris.expensetracker.utils.ConfirmationDialogeHelper
 import com.haris.expensetracker.utils.DateHelper
 
@@ -12,11 +17,17 @@ class AddGoalActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddGoalBinding
     private var selectedDate: String = ""
+    private lateinit var viewModel: GoalViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddGoalBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val database = AppDatabase.getDatabase(this)
+        val repository = FinanceRepository(database.FinanceDao())
+        val factory = GoalViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, factory)[GoalViewModel::class.java]
 
         val backPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -31,30 +42,24 @@ class AddGoalActivity : AppCompatActivity() {
 
         binding.btnSave.setOnClickListener {
             val name = binding.inputName.editText?.text.toString()
-            val target = binding.inputTarget.text.toString()
-            val savedAlready = binding.inputSavedAlready.text.toString()
+            val targetAmount = binding.inputTarget.text.toString().toDoubleOrNull() ?: 0.0
+            val savedAmount = binding.inputSavedAlready.text.toString().toDoubleOrNull() ?: 0.0
             val note = binding.inputNote.editText?.text.toString()
 
-            val targetAmount = target.toDoubleOrNull() ?: 0.0
-            val savedAmount = savedAlready.toDoubleOrNull() ?: 0.0
+            val userId = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
-            if (name.isEmpty()) {
-                binding.inputName.error = "Name is required"
-                return@setOnClickListener
+            if (validate(name, targetAmount, savedAmount)) {
+                viewModel.saveGoals(
+                    userId = userId,
+                    name = name,
+                    targetAmount = targetAmount,
+                    savedAmount = savedAmount,
+                    desiredDate = selectedDate,
+                    note = note
+                )
+                Toast.makeText(this, "Goals Saved Successfully", Toast.LENGTH_SHORT).show()
+                finish()
             }
-
-            if (targetAmount <= 0) {
-                binding.inputTarget.error = "Target amount must be greater than zero"
-                return@setOnClickListener
-            }
-
-            if (savedAmount > targetAmount) {
-                binding.inputTarget.error = null
-                binding.inputSavedAlready.error = "Saved amount cannot exceed target"
-                Toast.makeText(this, "Check your amounts!", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
         }
 
         binding.dateAutoComplete.setOnClickListener {
@@ -69,5 +74,32 @@ class AddGoalActivity : AppCompatActivity() {
         ConfirmationDialogeHelper.showConfirmationDialog(this) {
             finish()
         }
+    }
+
+    private fun validate(name: String, targetAmount: Double, savedAmount: Double): Boolean {
+        var isValid = true
+
+        if (name.isBlank()) {
+            binding.inputName.error = "Name is required"
+            isValid = false
+        } else {
+            binding.inputName.error = null
+        }
+
+        if (targetAmount <= 0) {
+            binding.inputTarget.error = "Target amount must be greater than zero"
+            isValid = false
+        } else {
+            binding.inputTarget.error = null
+        }
+
+        if (savedAmount > targetAmount) {
+            binding.inputSavedAlready.error = "Saved amount cannot exceed target"
+            isValid = false
+        } else {
+            binding.inputSavedAlready.error = null
+        }
+
+        return isValid
     }
 }

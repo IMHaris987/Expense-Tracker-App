@@ -7,7 +7,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.haris.expensetracker.data.repository.FinanaceRepository
+import com.haris.expensetracker.data.repository.FinanceRepository
 import com.haris.expensetracker.databinding.ActivityCreateNewBudgetBinding
 import com.haris.expensetracker.room.AppDatabase
 import com.haris.expensetracker.ui.budget.BudgetViewModel
@@ -25,7 +25,7 @@ class CreateNewBudgetActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val database = AppDatabase.getDatabase(this)
-        val repository = FinanaceRepository(database.FinanceDao())
+        val repository = FinanceRepository(database.FinanceDao())
         val factory = BudgetViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory)[BudgetViewModel::class.java]
 
@@ -49,24 +49,13 @@ class CreateNewBudgetActivity : AppCompatActivity() {
             val period = binding.inputPeriod.editText?.text.toString()
             val category = binding.inputCategories.editText?.text.toString()
 
+            val uid = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid ?: ""
+
             if (validate(name, amount)) {
-                viewModel.saveBudget(name, amount.toDouble(), period, category)
+                viewModel.saveBudget(uid, name, amount.toDouble(), period, category)
                 Toast.makeText(this, "Budget Saved Successfully", Toast.LENGTH_SHORT).show()
                 finish()
             }
-        }
-    }
-
-    private fun setupToolbar() {
-        val backPressedCallback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                showExitDialog()
-            }
-        }
-        onBackPressedDispatcher.addCallback(this, backPressedCallback)
-
-        binding.btnSave.setOnClickListener {
-            saveBudget()
         }
     }
 
@@ -93,21 +82,6 @@ class CreateNewBudgetActivity : AppCompatActivity() {
         binding.btnAddLabel.setOnClickListener {
             startActivity(Intent(this, AddLabelActivity::class.java))
         }
-    }
-
-    private fun saveBudget() {
-        val name = binding.inputName.editText?.text.toString()
-        val period = binding.inputPeriod.editText?.text.toString()
-        val amount = binding.inputAmount.editText?.text.toString()
-        val currency = binding.inputCurrency.editText?.text.toString()
-
-        if (name.isBlank()) {
-            binding.inputName.error = "Name is required"
-            return
-        }
-
-        Toast.makeText(this, "Budget '$name' saved!", Toast.LENGTH_SHORT).show()
-        finish()
     }
 
     private fun showExitDialog() {

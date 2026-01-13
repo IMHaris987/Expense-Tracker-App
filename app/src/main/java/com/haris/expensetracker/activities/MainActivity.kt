@@ -1,18 +1,25 @@
 package com.haris.expensetracker.activities
 
-import BudgetsGoalsFragment
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayout
-import com.haris.expensetracker.R
+import com.haris.expensetracker.adapter.TransactionAdapter
 import com.haris.expensetracker.databinding.ActivityMainBinding
+import com.haris.expensetracker.ui.budgetandgoals.BudgetsGoalsFragment
+import com.haris.expensetracker.ui.home.HomeViewModel
+import com.haris.expensetracker.ui.home.HomeViewModelFactory
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var homeViewModel: HomeViewModel
+    private lateinit var transactionAdapter: TransactionAdapter
     private var isFabMenuOpen = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,10 +27,38 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val database = com.haris.expensetracker.room.AppDatabase.getDatabase(this)
+        val repository = com.haris.expensetracker.data.repository.FinanceRepository(database.FinanceDao())
+
+        val factory = HomeViewModelFactory(repository)
+        homeViewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
+
         setupNavigationHeader()
         setupTabs()
 
         initFabMenuListeners()
+
+        transactionAdapter = TransactionAdapter()
+        binding.rvRecentTransactions.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            adapter = transactionAdapter
+        }
+
+        setupObservers()
+    }
+
+    private fun setupObservers() {
+        homeViewModel.totalBalance.observe(this) { balance ->
+            binding.tvTotalBalance.text = "PKR ${String.format("%.2f", balance)}"
+        }
+
+        homeViewModel.monthlyExpense.observe(this) { expense ->
+            binding.tvExpenseAmount.text = "PKR ${expense.toInt()}"
+        }
+
+        homeViewModel.recentTransactions.observe(this) { transactions ->
+            transactionAdapter.submitList(transactions)
+        }
     }
 
     private fun setupNavigationHeader() {
@@ -50,7 +85,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showAccountsTab() {
-        binding.accountsContent.visibility = View.VISIBLE
+        binding.accounts.visibility = View.VISIBLE
         binding.fragmentContainer.visibility = View.GONE
 
         val fragmentManager = supportFragmentManager
@@ -60,7 +95,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showBudgetsGoalsTab() {
-        binding.accountsContent.visibility = View.GONE
+        binding.accounts.visibility = View.GONE
         binding.fragmentContainer.visibility = View.VISIBLE
 
         supportFragmentManager.beginTransaction()
@@ -76,8 +111,13 @@ class MainActivity : AppCompatActivity() {
         binding.fabOverlay.setOnClickListener { closeFabMenu() }
 
         binding.btnNewRecord.setOnClickListener {
-            Toast.makeText(this, "New Record Clicked", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, AddTransactionActivity::class.java)
+            startActivity(intent)
             closeFabMenu()
+        }
+
+        binding.btnAddAccountCard.setOnClickListener {
+            startActivity(Intent(this, AddAccountActivity::class.java))
         }
 
         binding.btnCreateTemplate.setOnClickListener {

@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ExpenseTracker">
         <activity
+            android:name=".activities.AddAccountActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.AddTransactionActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.AddGoalActivity"
             android:exported="false" />
         <activity

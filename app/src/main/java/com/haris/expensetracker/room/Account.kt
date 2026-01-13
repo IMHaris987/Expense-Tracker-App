@@ -11,7 +11,7 @@ data class Account(
     val name: String,
     val balance: Double,
     val accountType: String,
-    val currecy: String
+    val currency: String
 )
 
 @Entity(
@@ -33,11 +33,22 @@ data class TransactionEntity(
 
 @Entity(tableName = "budgets")
 data class Budget(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val userId: String,
     val name: String,
     val limitAmount: Double,
     val spentAmount: Double = 0.0,
     val period: String,
     val categoryName: String
+)
+
+@Entity(tableName = "goals")
+data class Goals(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val userId: String,
+    val name: String,
+    val targetAmount: Double,
+    val savedAmount: Double,
+    val desiredDate: String,
+    val note: String
 )
