@@ -37,7 +37,7 @@ class AddAccountActivity : AppCompatActivity() {
                     id = 0,
                     name = name,
                     balance = balance,
-                    accountType = "Regular",
+                    accountType = "Cash",
                     currency = "PKR"
                 )
                 dao.insertAccount(newAccount)

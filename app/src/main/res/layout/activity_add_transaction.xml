@@ -11,7 +11,6 @@
         android:layout_height="80dp"
         android:background="@color/dot_active"
         android:paddingHorizontal="16dp">
-
         <ImageButton
             android:id="@+id/btnClose"
             android:layout_width="48dp"
@@ -20,17 +19,15 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_close"
             app:tint="@android:color/white" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginStart="8dp"
             android:layout_toEndOf="@id/btnClose"
-            android:text="Add Transaction"
+            android:text="New Transaction"
             android:textColor="@android:color/white"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="normal" />
     </RelativeLayout>
 
     <ScrollView
@@ -44,58 +41,135 @@
             android:orientation="vertical"
             android:padding="20dp">
 
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/toggleGroupType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:singleSelection="true"
+                app:selectionRequired="true"
+                app:checkedButton="@id/btnTypeExpense">
+
+                <Button
+                    android:id="@+id/btnTypeExpense"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Expense" />
+
+                <Button
+                    android:id="@+id/btnTypeIncome"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Income" />
+
+                <Button
+                    android:id="@+id/btnTypeTransfer"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Transfer" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
             <EditText
                 android:id="@+id/etAmount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:hint="Amount (PKR)"
+                android:hint="0.00"
                 android:inputType="numberDecimal"
-                android:textSize="18sp" />
+                android:textSize="24sp"
+                android:gravity="center"/>
+
+            <LinearLayout
+                android:id="@+id/btnPickDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="?attr/selectableItemBackground"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp">
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_calendar"
+                    app:tint="#757575"/>
+                <TextView
+                    android:id="@+id/tvDateDisplay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="Today"
+                    android:textSize="16sp"/>
+            </LinearLayout>
 
             <TextView
+                android:id="@+id/tvFromAccountLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Select Account"
-                android:textColor="#757575"
-                android:textSize="14sp" />
-
+                android:text="From Account"
+                android:textColor="#757575"/>
             <Spinner
                 android:id="@+id/spinnerAccount"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginBottom="16dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Select Category"
-                android:textColor="#757575"
-                android:textSize="14sp" />
-
-            <Spinner
-                android:id="@+id/spinnerCategory"
+            <LinearLayout
+                android:id="@+id/layoutToAccount"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginBottom="16dp" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="To Account"
+                    android:textColor="#757575"/>
+                <Spinner
+                    android:id="@+id/spinnerTargetAccount"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="16dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Category"
+                    android:textColor="#757575"/>
+                <Spinner
+                    android:id="@+id/spinnerCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="16dp" />
+            </LinearLayout>
 
             <EditText
                 android:id="@+id/etNote"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:hint="Add a note (optional)" />
+                android:hint="Add a note"
+                android:layout_marginBottom="24dp"/>
 
             <Button
                 android:id="@+id/btnSaveTransaction"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:backgroundTint="@color/dot_active"
-                android:text="Save Transaction"
+                android:text="Save"
                 android:textColor="@android:color/white"
                 android:textStyle="bold" />
 
         </LinearLayout>
     </ScrollView>
-
 </RelativeLayout>

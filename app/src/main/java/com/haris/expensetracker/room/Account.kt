@@ -28,6 +28,7 @@ data class TransactionEntity(
     val date: java.util.Date,
     val type: String,
     val accountId: Long,
+    val targetAccountId: Long? = null,
     val categoryName: String
 )
 

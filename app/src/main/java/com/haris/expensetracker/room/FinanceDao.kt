@@ -39,6 +39,30 @@ interface FinanceDao {
     @Query("UPDATE accounts SET balance = balance + :amount WHERE id = :accountId")
     suspend fun increaseAccountBalance(accountId: Long, amount: Double)
 
+    @Query("UPDATE accounts SET balance = balance + :amount WHERE id = :id")
+    suspend fun increaseBalance(id: Long, amount: Double)
+
+    @Query("UPDATE accounts SET balance = balance - :amount WHERE id = :id")
+    suspend fun decreaseBalance(id: Long, amount: Double)
+
+    @Transaction
+    suspend fun processTransaction(transaction: TransactionEntity) {
+        insertTransaction(transaction)
+
+        when (transaction.type) {
+            "Expense" -> decreaseBalance(transaction.accountId, transaction.amount)
+            "Income" -> increaseBalance(transaction.accountId, transaction.amount)
+            "Transfer" -> {
+                // Deduct from Source
+                decreaseBalance(transaction.accountId, transaction.amount)
+                // Add to Target
+                transaction.targetAccountId?.let { targetId ->
+                    increaseBalance(targetId, transaction.amount)
+                }
+            }
+        }
+    }
+
     @Insert
     suspend fun insertBudget(budget: Budget)
 

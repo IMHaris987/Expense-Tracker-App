@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- MAIN CONTENT -->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,7 +14,7 @@
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/dot_active"
+            android:background="#2196F3"
             android:elevation="4dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -44,7 +43,6 @@
                     android:text="Home"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp"
-                    android:textStyle="normal"
                     app:layout_constraintBottom_toBottomOf="@id/btn_drawer"
                     app:layout_constraintStart_toEndOf="@id/btn_drawer"
                     app:layout_constraintTop_toTopOf="@id/btn_drawer" />
@@ -68,7 +66,7 @@
                 android:id="@+id/tabLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/dot_active"
+                android:background="#2196F3"
                 app:tabIndicatorColor="#FFFFFF"
                 app:tabIndicatorHeight="3dp"
                 app:tabSelectedTextColor="#FFFFFF"
@@ -86,13 +84,11 @@
             </com.google.android.material.tabs.TabLayout>
         </com.google.android.material.appbar.AppBarLayout>
 
-        <!-- Container that holds both accounts content and fragment -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <!-- Accounts Tab Content -->
             <androidx.core.widget.NestedScrollView
                 android:id="@+id/accounts"
                 android:layout_width="match_parent"
@@ -104,7 +100,6 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <!-- List of Accounts Section -->
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -112,208 +107,76 @@
                         app:cardCornerRadius="12dp"
                         app:cardElevation="2dp">
 
-                        <LinearLayout
+                        <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
                             android:padding="16dp">
 
-                            <!-- Header -->
-                            <RelativeLayout
-                                android:layout_width="match_parent"
+                            <TextView
+                                android:id="@+id/tvHeader"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="16dp">
+                                android:text="List of accounts"
+                                android:textColor="#000000"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentStart="true"
-                                    android:layout_centerVertical="true"
-                                    android:text="List of accounts"
-                                    android:textColor="#000000"
-                                    android:textSize="18sp"
-                                    android:textStyle="bold" />
+                            <ImageView
+                                android:id="@+id/btn_account_settings"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/ic_settings"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:tint="#2196F3" />
 
-                                <ImageView
-                                    android:layout_width="32dp"
-                                    android:layout_height="32dp"
-                                    android:layout_alignParentEnd="true"
-                                    android:layout_centerVertical="true"
-                                    android:padding="4dp"
-                                    android:src="@drawable/ic_settings"
-                                    app:tint="@color/dot_active" />
-                            </RelativeLayout>
-
-                            <!-- Account Cards -->
                             <LinearLayout
+                                android:id="@+id/llAccountRow"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="12dp"
+                                android:layout_marginTop="12dp"
+                                android:gravity="center_vertical"
                                 android:orientation="horizontal"
-                                android:weightSum="2">
+                                app:layout_constraintTop_toBottomOf="@id/tvHeader">
 
-                                <!-- Cash Account -->
-                                <androidx.cardview.widget.CardView
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/rvAccounts"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginEnd="8dp"
                                     android:layout_weight="1"
-                                    app:cardBackgroundColor="#2196F3"
-                                    app:cardCornerRadius="8dp"
-                                    app:cardElevation="0dp">
-
-                                    <LinearLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:orientation="vertical"
-                                        android:padding="16dp">
-
-                                        <TextView
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="Cash"
-                                            android:textColor="#FFFFFF"
-                                            android:textSize="16sp" />
-
-                                        <TextView
-                                            android:id="@+id/tvTotalBalance"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="PKR 1,000.00"
-                                            android:textColor="#FFFFFF"
-                                            android:textSize="18sp"
-                                            android:textStyle="normal" />
-                                    </LinearLayout>
-                                </androidx.cardview.widget.CardView>
-
-                                <!-- Add Account -->
-                                <androidx.cardview.widget.CardView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="8dp"
-                                    android:layout_weight="1"
-                                    app:cardBackgroundColor="#FFFFFF"
-                                    app:cardCornerRadius="8dp"
-                                    app:cardElevation="0dp"
-                                    app:strokeColor="#2196F3"
-                                    app:strokeWidth="2dp">
-
-                                    <LinearLayout
-                                        android:id="@+id/btn_add_account_card"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:gravity="center"
-                                        android:orientation="horizontal"
-                                        android:padding="16dp">
-
-                                        <TextView
-                                            android:layout_width="0dp"
-                                            android:layout_height="wrap_content"
-                                            android:layout_weight="1"
-                                            android:text="Add account"
-                                            android:textColor="#2196F3"
-                                            android:textSize="16sp"
-                                            android:textStyle="bold" />
-
-                                        <ImageView
-                                            android:layout_width="24dp"
-                                            android:layout_height="24dp"
-                                            android:src="@android:drawable/ic_input_add"
-                                            app:tint="#2196F3" />
-                                    </LinearLayout>
-                                </androidx.cardview.widget.CardView>
+                                    android:orientation="horizontal" />
                             </LinearLayout>
 
-                            <!-- Account Detail Button -->
+                            <TextView
+                                android:id="@+id/tvTotalBalance"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="16dp"
+                                android:text="Total: PKR 0.00"
+                                android:textColor="#666666"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/llAccountRow" />
+
                             <Button
-                                android:id="@+id/buttonAccountDetail"
+                                android:id="@+id/btnAccountDetail"
                                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Account Detail"
+                                android:layout_marginTop="12dp"
+                                android:text="ACCOUNT DETAIL"
                                 android:textColor="#000000"
-                                app:strokeColor="#CCCCCC" />
-                        </LinearLayout>
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/tvTotalBalance" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
                     </androidx.cardview.widget.CardView>
 
-                    <!-- Track Your Spending Card -->
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="2dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="16dp">
-
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp">
-
-                                <ImageView
-                                    android:id="@+id/googlePayIcon"
-                                    android:layout_width="48dp"
-                                    android:layout_height="48dp"
-                                    android:layout_alignParentStart="true"
-                                    android:layout_marginEnd="12dp"
-                                    android:src="@drawable/ic_google_pay" />
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_centerVertical="true"
-                                    android:layout_toEndOf="@id/googlePayIcon"
-                                    android:layout_toStartOf="@id/closeButton"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Track your spending"
-                                        android:textColor="#000000"
-                                        android:textSize="16sp"
-                                        android:textStyle="bold" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Set up automatic tracking for your Google Pay purchases."
-                                        android:textColor="#666666"
-                                        android:textSize="14sp" />
-                                </LinearLayout>
-
-                                <ImageView
-                                    android:id="@+id/closeButton"
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
-                                    android:layout_alignParentEnd="true"
-                                    android:layout_centerVertical="true"
-                                    android:src="@android:drawable/ic_menu_close_clear_cancel"
-                                    app:tint="#999999" />
-                            </RelativeLayout>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Start set up"
-                                android:textColor="#2196F3"
-                                android:textSize="14sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
-
-                    <!-- Expenses Structure Section -->
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="2dp">
+                        app:cardCornerRadius="12dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -330,26 +193,18 @@
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="LAST 30 DAYS"
-                                android:textColor="#999999"
-                                android:textSize="12sp" />
-
-                            <TextView
                                 android:id="@+id/tvExpenseAmount"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="PKR 0"
-                                android:textColor="#000000"
+                                android:textColor="#F44336"
                                 android:textSize="32sp"
                                 android:textStyle="bold" />
 
                             <View
                                 android:layout_width="match_parent"
                                 android:layout_height="1dp"
-                                android:layout_marginTop="8dp"
-                                android:layout_marginBottom="8dp"
+                                android:layout_marginVertical="12dp"
                                 android:background="#EEEEEE"/>
 
                             <TextView
@@ -364,19 +219,16 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:nestedScrollingEnabled="false" />
-
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
 
-            <!-- Fragment Container (Initially hidden) -->
             <FrameLayout
                 android:id="@+id/fragmentContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone" />
-
         </FrameLayout>
 
         <View
@@ -393,33 +245,29 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_marginEnd="24dp"
-            android:layout_marginBottom="100dp"
-            android:clipToPadding="false"
+            android:layout_marginBottom="90dp"
             android:elevation="11dp"
             android:gravity="end"
             android:orientation="vertical"
             android:visibility="gone">
 
             <LinearLayout
-                android:id="@+id/btnCreateTemplate"
+                android:id="@+id/btnAddAccountCard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/bg_fab_label"
-                android:gravity="center_vertical"
                 android:padding="12dp">
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_lightbulb"
-                    app:tint="#444444" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="Create first template"
-                    android:textColor="#444444"
-                    android:textStyle="bold" />
+                    android:text="Add Account"
+                    android:layout_marginEnd="8dp"
+                    android:textStyle="bold"/>
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@android:drawable/ic_input_add" />
             </LinearLayout>
 
             <LinearLayout
@@ -427,20 +275,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_fab_label"
-                android:gravity="center_vertical"
                 android:padding="12dp">
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_edit"
-                    app:tint="#444444" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="New record"
-                    android:textColor="#444444"
-                    android:textStyle="bold" />
+                    android:text="New Record"
+                    android:layout_marginEnd="8dp"
+                    android:textStyle="bold"/>
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_edit" />
             </LinearLayout>
         </LinearLayout>
 
@@ -457,7 +302,6 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <!-- DRAWER -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation_view"
         android:layout_width="wrap_content"
