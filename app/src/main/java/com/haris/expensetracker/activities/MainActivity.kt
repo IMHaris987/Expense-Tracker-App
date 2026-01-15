@@ -9,7 +9,9 @@ import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
+import com.haris.expensetracker.R
 import com.haris.expensetracker.adapter.AccountAdapter
 import com.haris.expensetracker.adapter.TransactionAdapter
 import com.haris.expensetracker.databinding.ActivityMainBinding
@@ -30,33 +32,31 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Database and Repository Setup
+        // Database & ViewModel Setup
         val database = com.haris.expensetracker.room.AppDatabase.getDatabase(this)
         val repository = com.haris.expensetracker.data.repository.FinanceRepository(database.FinanceDao())
-
-        // ViewModel Setup
         val factory = HomeViewModelFactory(repository)
         homeViewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
 
         setupNavigationHeader()
         setupTabs()
         initFabMenuListeners()
+        setupNavigationDrawer()
 
-        // Transaction RecyclerView Setup
+        // Transaction Adapter
         transactionAdapter = TransactionAdapter()
         binding.rvRecentTransactions.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = transactionAdapter
         }
 
-        // Account RecyclerView Setup (Horizontal)
+        // Account Adapter (Horizontal)
         val accountAdapter = AccountAdapter(emptyList())
         binding.rvAccounts.apply {
             layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
             adapter = accountAdapter
         }
 
-        // Collect Accounts from Database
         lifecycleScope.launch {
             database.FinanceDao().getAllAccounts().collect { accounts ->
                 if (accounts.isNotEmpty()) {
@@ -82,6 +82,39 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupNavigationDrawer() {
+        binding.navigationView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.nav_logout -> showLogoutConfirmationDialog()
+            }
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+            true
+        }
+    }
+
+    private fun showLogoutConfirmationDialog() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Confirm Logout")
+            .setMessage("Are you sure you want to log out?")
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setPositiveButton("Logout") { _, _ ->
+                performLogout()
+            }
+            .show()
+    }
+
+    private fun performLogout() {
+        val sharedPref = getSharedPreferences("UserSession", MODE_PRIVATE)
+        sharedPref.edit().clear().apply()
+
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
+    }
+
     private fun setupNavigationHeader() {
         binding.btnDrawer.setOnClickListener {
             binding.drawerLayout.openDrawer(GravityCompat.START)
@@ -89,6 +122,11 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnNotification.setOnClickListener {
             Toast.makeText(this, "Notifications clicked", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.btnAccountSettings.setOnClickListener {
+            val intent = Intent(this, SettingActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -108,10 +146,6 @@ class MainActivity : AppCompatActivity() {
     private fun showAccountsTab() {
         binding.accounts.visibility = View.VISIBLE
         binding.fragmentContainer.visibility = View.GONE
-        val fragmentManager = supportFragmentManager
-        if (fragmentManager.backStackEntryCount > 0) {
-            fragmentManager.popBackStack()
-        }
     }
 
     private fun showBudgetsGoalsTab() {

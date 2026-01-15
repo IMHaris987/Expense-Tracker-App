@@ -5,7 +5,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
-import java.time.Period
 
 @Dao
 interface FinanceDao {
@@ -53,15 +52,16 @@ interface FinanceDao {
             "Expense" -> decreaseBalance(transaction.accountId, transaction.amount)
             "Income" -> increaseBalance(transaction.accountId, transaction.amount)
             "Transfer" -> {
-                // Deduct from Source
                 decreaseBalance(transaction.accountId, transaction.amount)
-                // Add to Target
                 transaction.targetAccountId?.let { targetId ->
                     increaseBalance(targetId, transaction.amount)
                 }
             }
         }
     }
+
+    @Query("DELETE FROM budgets WHERE id = :budgetId")
+    suspend fun deleteBudgetById(budgetId: Int)
 
     @Insert
     suspend fun insertBudget(budget: Budget)
@@ -72,16 +72,6 @@ interface FinanceDao {
     @Query("SELECT * FROM budgets WHERE userId = :currentUserId")
     fun getBudgetByUserId(currentUserId: String): LiveData<List<Budget>>
 
-    @Query("UPDATE budgets SET spentAmount = spentAmount + :amount WHERE categoryName = :category AND period = :currentPeriod")
-    suspend fun updateBudgetSpending(amount: Double, category: String, currentPeriod: String)
-
-    @Transaction
-    suspend fun recordExpense(transaction: TransactionEntity, period: String) {
-        insertTransaction(transaction)
-        reduceAccountBalance(transaction.accountId, transaction.amount)
-        updateBudgetSpending(transaction.amount, transaction.categoryName, period)
-    }
-
     @Insert
     suspend fun insertGoals(goal: Goals)
 
@@ -90,4 +80,7 @@ interface FinanceDao {
 
     @Query("SELECT * FROM goals WHERE userId = :currentUserId")
     fun getGoalsByUserId(currentUserId: String): LiveData<List<Goals>>
+
+    @Query("SELECT SUM(amount) FROM transactions WHERE categoryName = :category AND type = 'Expense' AND date BETWEEN :startDate AND :endDate")
+    fun getSpentAmountForCategory(category: String, startDate: Long, endDate: Long): Double?
 }

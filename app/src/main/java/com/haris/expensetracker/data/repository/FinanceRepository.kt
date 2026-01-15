@@ -10,25 +10,19 @@ import kotlinx.coroutines.flow.Flow
 
 class FinanceRepository(private val financeDao: FinanceDao) {
 
-    val allBudgets: Flow<List<Budget>> = financeDao.getAllBudget()
     val allAccounts: Flow<List<Account>> = financeDao.getAllAccounts()
     val allTransactions: Flow<List<TransactionEntity>> = financeDao.getAllTransaction()
-    val allGoals: Flow<List<Goals>> = financeDao.getAllGoals()
 
     suspend fun insertBudget(budget: Budget) {
         financeDao.insertBudget(budget)
     }
 
-    suspend fun insertAccount(account: Account) {
-        financeDao.insertAccount(account)
+    suspend fun processTransaction(transaction: TransactionEntity) {
+        financeDao.processTransaction(transaction)
     }
 
-    suspend fun insertTransaction(transaction: TransactionEntity) {
-        financeDao.addTransactionAndUpdateAccount(transaction)
-    }
-
-    suspend fun recordExpenseWithBudget(transaction: TransactionEntity, period: String) {
-        financeDao.recordExpense(transaction, period)
+    suspend fun deleteBudget(budgetId: Int) {
+        financeDao.deleteBudgetById(budgetId)
     }
 
     suspend fun insertGoals(goals: Goals) {
@@ -41,5 +35,9 @@ class FinanceRepository(private val financeDao: FinanceDao) {
 
     fun getGoalsForUser(uid: String): LiveData<List<Goals>> {
         return financeDao.getGoalsByUserId(uid)
+    }
+
+    fun getSpentAmount(category: String, start: Long, end: Long): Double {
+        return financeDao.getSpentAmountForCategory(category, start, end) ?: 0.0
     }
 }

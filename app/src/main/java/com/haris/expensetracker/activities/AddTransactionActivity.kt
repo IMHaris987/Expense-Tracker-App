@@ -5,12 +5,17 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.auth.FirebaseAuth
 import com.haris.expensetracker.R
+import com.haris.expensetracker.data.repository.FinanceRepository
 import com.haris.expensetracker.databinding.ActivityAddTransactionBinding
 import com.haris.expensetracker.room.Account
 import com.haris.expensetracker.room.AppDatabase
 import com.haris.expensetracker.room.TransactionEntity
+import com.haris.expensetracker.ui.transaction.TransactionViewModel
+import com.haris.expensetracker.ui.transaction.TransactionViewModelFactory
 import com.haris.expensetracker.utils.ConfirmationDialogeHelper
 import com.haris.expensetracker.utils.DateHelper
 import kotlinx.coroutines.launch
@@ -22,10 +27,9 @@ class AddTransactionActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddTransactionBinding
     private var accountList = listOf<Account>()
-
-    // Default to today's date formatted correctly
     private var selectedDateString: String = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
     private var selectedType = "Expense"
+    private lateinit var transactionViewModel: TransactionViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,17 +38,17 @@ class AddTransactionActivity : AppCompatActivity() {
 
         val database = AppDatabase.getDatabase(this)
         val dao = database.FinanceDao()
+        val repository = FinanceRepository(database.FinanceDao())
+        val factory = TransactionViewModelFactory(repository)
+        transactionViewModel = ViewModelProvider(this, factory)[TransactionViewModel::class.java]
 
         setupTypeToggles()
 
-        // Set initial date text
         binding.tvDateDisplay.text = selectedDateString
 
-        // 1. Setup Categories
         val categories = listOf("Food", "Fuel", "Rent", "Shopping", "Salary", "Transport", "Entertainment")
         binding.spinnerCategory.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, categories)
 
-        // 2. Setup Accounts from Room
         lifecycleScope.launch {
             dao.getAllAccounts().collect { accounts ->
                 accountList = accounts
@@ -72,11 +76,9 @@ class AddTransactionActivity : AppCompatActivity() {
             saveTransaction(dao)
         }
 
-        // 4. Date Picker Implementation
         binding.btnPickDate.setOnClickListener {
             DateHelper.showDatePicker(this) { date ->
                 selectedDateString = date
-                // Update the TextView inside the LinearLayout
                 binding.tvDateDisplay.text = date
             }
         }
@@ -150,7 +152,7 @@ class AddTransactionActivity : AppCompatActivity() {
                 categoryName = categoryName
             )
 
-            dao.processTransaction(transaction)
+            transactionViewModel.processNewTransaction(transaction)
             Toast.makeText(this@AddTransactionActivity, "Saved!", Toast.LENGTH_SHORT).show()
             finish()
         }
