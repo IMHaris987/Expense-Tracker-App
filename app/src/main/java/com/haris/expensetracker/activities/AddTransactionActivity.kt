@@ -13,6 +13,7 @@ import com.haris.expensetracker.data.repository.FinanceRepository
 import com.haris.expensetracker.databinding.ActivityAddTransactionBinding
 import com.haris.expensetracker.room.Account
 import com.haris.expensetracker.room.AppDatabase
+import com.haris.expensetracker.room.FinanceDao
 import com.haris.expensetracker.room.TransactionEntity
 import com.haris.expensetracker.ui.transaction.TransactionViewModel
 import com.haris.expensetracker.ui.transaction.TransactionViewModelFactory
@@ -111,7 +112,7 @@ class AddTransactionActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveTransaction(dao: com.haris.expensetracker.room.FinanceDao) {
+    private fun saveTransaction(dao: FinanceDao) {
         val amount = binding.etAmount.text.toString().toDoubleOrNull()
         val note = binding.etNote.text.toString()
 
@@ -138,14 +139,15 @@ class AddTransactionActivity : AppCompatActivity() {
             categoryName = "Transfer"
         }
 
-        // Convert the String date back to a Date object for Room
         val dateObject = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(selectedDateString) ?: Date()
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
         lifecycleScope.launch {
             val transaction = TransactionEntity(
+                userId = uid,
                 amount = amount,
                 note = note,
-                date = dateObject, // Passed as Date object
+                date = dateObject,
                 type = selectedType,
                 accountId = sourceAccount.id,
                 targetAccountId = targetAccountId,

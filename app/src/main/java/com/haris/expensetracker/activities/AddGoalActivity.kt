@@ -1,6 +1,7 @@
 package com.haris.expensetracker.activities
 
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -44,6 +45,7 @@ class AddGoalActivity : AppCompatActivity() {
             val name = binding.inputName.editText?.text.toString()
             val targetAmount = binding.inputTarget.text.toString().toDoubleOrNull() ?: 0.0
             val savedAmount = binding.inputSavedAlready.text.toString().toDoubleOrNull() ?: 0.0
+            val category = binding.inputCategories.editText?.text.toString()
             val note = binding.inputNote.editText?.text.toString()
 
             val userId = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid ?: ""
@@ -55,6 +57,7 @@ class AddGoalActivity : AppCompatActivity() {
                     targetAmount = targetAmount,
                     savedAmount = savedAmount,
                     desiredDate = selectedDate,
+                    categoryName = category,
                     note = note
                 )
                 Toast.makeText(this, "Goals Saved Successfully", Toast.LENGTH_SHORT).show()
@@ -68,6 +71,13 @@ class AddGoalActivity : AppCompatActivity() {
                 binding.dateAutoComplete.setText(date, false)
             }
         }
+        setupDropDowns()
+    }
+
+    private fun setupDropDowns() {
+        val category = listOf("All", "Food", "Transport", "Utilities", "Entertainment")
+        val categoryAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, category)
+        (binding.inputCategories.editText as? android.widget.AutoCompleteTextView)?.setAdapter(categoryAdapter)
     }
 
     private fun showExitDialog() {

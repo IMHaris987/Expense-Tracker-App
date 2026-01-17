@@ -3,6 +3,7 @@ package com.haris.expensetracker.room
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import java.util.Date
 
 @Entity(tableName = "accounts")
 data class Account(
@@ -21,11 +22,11 @@ data class Account(
     ]
 )
 data class TransactionEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val userId: String,
     val amount: Double,
     val note: String,
-    val date: java.util.Date,
+    val date: Date,
     val type: String,
     val accountId: Long,
     val targetAccountId: Long? = null,
@@ -51,5 +52,6 @@ data class Goals(
     val targetAmount: Double,
     val savedAmount: Double,
     val desiredDate: String,
+    val categoryName: String,
     val note: String
 )

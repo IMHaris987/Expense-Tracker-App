@@ -13,13 +13,13 @@ interface FinanceDao {
     suspend fun insertAccount(account: Account)
 
     @Query("SELECT * FROM accounts")
-    fun getAllAccounts(): kotlinx.coroutines.flow.Flow<List<Account>>
+    fun getAllAccounts(): LiveData<List<Account>>
 
     @Insert
     suspend fun insertTransaction(transaction: TransactionEntity)
 
     @Query("SELECT * FROM transactions ORDER BY date DESC")
-    fun getAllTransaction(): kotlinx.coroutines.flow.Flow<List<TransactionEntity>>
+    fun getAllTransaction(): LiveData<List<TransactionEntity>>
 
     @Transaction
     suspend fun addTransactionAndUpdateAccount(transaction: TransactionEntity) {
@@ -63,11 +63,14 @@ interface FinanceDao {
     @Query("DELETE FROM budgets WHERE id = :budgetId")
     suspend fun deleteBudgetById(budgetId: Int)
 
+    @Query("DELETE FROM goals WHERE id = :goalId")
+    suspend fun deleteGoalById(goalId: Int)
+
     @Insert
     suspend fun insertBudget(budget: Budget)
 
     @Query("SELECT * FROM budgets")
-    fun getAllBudget(): kotlinx.coroutines.flow.Flow<List<Budget>>
+    fun getAllBudget(): LiveData<List<Budget>>
 
     @Query("SELECT * FROM budgets WHERE userId = :currentUserId")
     fun getBudgetByUserId(currentUserId: String): LiveData<List<Budget>>
@@ -76,11 +79,14 @@ interface FinanceDao {
     suspend fun insertGoals(goal: Goals)
 
     @Query("SELECT * FROM goals")
-    fun getAllGoals(): kotlinx.coroutines.flow.Flow<List<Goals>>
+    fun getAllGoals(): LiveData<List<Goals>>
 
     @Query("SELECT * FROM goals WHERE userId = :currentUserId")
     fun getGoalsByUserId(currentUserId: String): LiveData<List<Goals>>
 
     @Query("SELECT SUM(amount) FROM transactions WHERE categoryName = :category AND type = 'Expense' AND date BETWEEN :startDate AND :endDate")
     fun getSpentAmountForCategory(category: String, startDate: Long, endDate: Long): Double?
+
+    @Query("SELECT SUM(amount) FROM transactions WHERE categoryName = :goalCategory AND userId = :uid AND (type = 'Income' OR type = 'Transfer')")
+    fun getSavedAmountForGoal(goalCategory: String, uid: String): Double?
 }

@@ -7,7 +7,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
@@ -18,13 +17,13 @@ import com.haris.expensetracker.databinding.ActivityMainBinding
 import com.haris.expensetracker.ui.budgetandgoals.BudgetsGoalsFragment
 import com.haris.expensetracker.ui.home.HomeViewModel
 import com.haris.expensetracker.ui.home.HomeViewModelFactory
-import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var transactionAdapter: TransactionAdapter
+    private lateinit var accountAdapter: AccountAdapter
     private var isFabMenuOpen = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,40 +31,53 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Database & ViewModel Setup
         val database = com.haris.expensetracker.room.AppDatabase.getDatabase(this)
         val repository = com.haris.expensetracker.data.repository.FinanceRepository(database.FinanceDao())
         val factory = HomeViewModelFactory(repository)
         homeViewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
 
-        setupNavigationHeader()
-        setupTabs()
-        initFabMenuListeners()
-        setupNavigationDrawer()
-
-        // Transaction Adapter
         transactionAdapter = TransactionAdapter()
         binding.rvRecentTransactions.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = transactionAdapter
         }
 
-        // Account Adapter (Horizontal)
-        val accountAdapter = AccountAdapter(emptyList())
+        accountAdapter = AccountAdapter(emptyList())
         binding.rvAccounts.apply {
             layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
             adapter = accountAdapter
         }
 
-        lifecycleScope.launch {
-            database.FinanceDao().getAllAccounts().collect { accounts ->
-                if (accounts.isNotEmpty()) {
-                    accountAdapter.submitList(accounts)
-                }
+        setupAccountObservers()
+        setupObservers()
+        setupNavigationHeader()
+        setupTabs()
+        initFabMenuListeners()
+        setupNavigationDrawer()
+    }
+
+    private fun setupAccountObservers() {
+        homeViewModel.allAccounts.observe(this) { accounts ->
+            if (!accounts.isNullOrEmpty()) {
+                accountAdapter.submitList(accounts)
             }
         }
 
-        setupObservers()
+        // Observer for Balance
+        homeViewModel.totalBalance.observe(this) { balance ->
+            binding.tvTotalBalance.text = "Total: PKR ${String.format("%.2f", balance)}"
+        }
+
+        // Observer for Monthly Expense
+        homeViewModel.monthlyExpense.observe(this) { expense ->
+            binding.tvExpenseAmount.text = "PKR ${expense.toInt()}"
+        }
+
+        // Observer for Recent Transactions
+        // Note: Ensure your ViewModel variable is named 'recentTransactions' (plural)
+        homeViewModel.recentTransaction.observe(this) { transactions ->
+            transactionAdapter.submitList(transactions)
+        }
     }
 
     private fun setupObservers() {
@@ -77,7 +89,7 @@ class MainActivity : AppCompatActivity() {
             binding.tvExpenseAmount.text = "PKR ${expense.toInt()}"
         }
 
-        homeViewModel.recentTransactions.observe(this) { transactions ->
+        homeViewModel.recentTransaction.observe(this) { transactions ->
             transactionAdapter.submitList(transactions)
         }
     }

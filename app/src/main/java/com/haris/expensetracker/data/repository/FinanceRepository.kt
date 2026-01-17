@@ -6,12 +6,11 @@ import com.haris.expensetracker.room.Budget
 import com.haris.expensetracker.room.FinanceDao
 import com.haris.expensetracker.room.Goals
 import com.haris.expensetracker.room.TransactionEntity
-import kotlinx.coroutines.flow.Flow
 
 class FinanceRepository(private val financeDao: FinanceDao) {
 
-    val allAccounts: Flow<List<Account>> = financeDao.getAllAccounts()
-    val allTransactions: Flow<List<TransactionEntity>> = financeDao.getAllTransaction()
+    val allAccounts: LiveData<List<Account>> = financeDao.getAllAccounts()
+    val allTransactions: LiveData<List<TransactionEntity>> = financeDao.getAllTransaction()
 
     suspend fun insertBudget(budget: Budget) {
         financeDao.insertBudget(budget)
@@ -23,6 +22,10 @@ class FinanceRepository(private val financeDao: FinanceDao) {
 
     suspend fun deleteBudget(budgetId: Int) {
         financeDao.deleteBudgetById(budgetId)
+    }
+
+    suspend fun deleteGoal(goalId: Int) {
+        financeDao.deleteGoalById(goalId)
     }
 
     suspend fun insertGoals(goals: Goals) {
@@ -39,5 +42,9 @@ class FinanceRepository(private val financeDao: FinanceDao) {
 
     fun getSpentAmount(category: String, start: Long, end: Long): Double {
         return financeDao.getSpentAmountForCategory(category, start, end) ?: 0.0
+    }
+
+    fun getSavedAmount(goalCategory: String, uid: String): Double {
+        return financeDao.getSavedAmountForGoal(goalCategory, uid) ?: 0.0
     }
 }

@@ -20,8 +20,6 @@ class CreateGoalActivity : AppCompatActivity() {
         binding = ActivityCreateGoalBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val uid = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid ?: ""
-
         val backPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 showExitDialog()

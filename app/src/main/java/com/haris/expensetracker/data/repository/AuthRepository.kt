@@ -7,7 +7,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.tasks.await
 
-
 sealed class Result <out T> {
     data class Success<out T>(val data: T) : Result<T>()
     data class Failure(val exception: Exception) : Result<Nothing>()

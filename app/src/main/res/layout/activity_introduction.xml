@@ -57,6 +57,7 @@
         app:cardElevation="4dp">
 
         <LinearLayout
+            android:id="@+id/button"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
@@ -74,7 +75,6 @@
                 android:textStyle="bold" />
 
             <ImageView
-                android:id="@+id/button"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_arrow_forward"

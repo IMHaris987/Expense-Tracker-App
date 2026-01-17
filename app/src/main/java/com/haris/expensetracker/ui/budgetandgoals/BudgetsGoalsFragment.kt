@@ -25,10 +25,8 @@ class BudgetsGoalsFragment : Fragment() {
 
     private var _binding: FragmentBudgetsGoalsBinding? = null
     private val binding get() = _binding!!
-
     private lateinit var budgetViewModel: BudgetViewModel
     private lateinit var goalViewModel: GoalViewModel
-
     private lateinit var budgetAdapter: BudgetAdapter
     private lateinit var goalAdapter: GoalAdapter
 
@@ -45,14 +43,11 @@ class BudgetsGoalsFragment : Fragment() {
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
         val database = AppDatabase.getDatabase(requireContext())
         val repository = FinanceRepository(database.FinanceDao())
-
-        // ViewModel Setup
         val budgetFactory = BudgetViewModelFactory(repository)
         val goalFactory = GoalViewModelFactory(repository)
 
         budgetViewModel = ViewModelProvider(this, budgetFactory)[BudgetViewModel::class.java]
         goalViewModel = ViewModelProvider(this, goalFactory)[GoalViewModel::class.java]
-        goalAdapter = GoalAdapter()
 
         budgetAdapter = BudgetAdapter(
             onCreateClick = {
@@ -70,8 +65,21 @@ class BudgetsGoalsFragment : Fragment() {
             }
         )
 
-        binding.budgetRecyclerView.layoutManager = LinearLayoutManager(context)
-        binding.budgetRecyclerView.adapter = budgetAdapter
+        goalAdapter = GoalAdapter(
+            onCreateClick = {
+                startActivity(Intent(context, CreateGoalActivity::class.java))
+            },
+            onDeleteClick = { goalId ->
+                androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                    .setTitle("Delete Goal")
+                    .setMessage("Are you sure you want to delete this Goal?")
+                    .setPositiveButton("Yes") { _, _ ->
+                        goalViewModel.deleteGoal(goalId)
+                    }
+                    .setNegativeButton("No", null)
+                    .show()
+            }
+        )
 
         binding.budgetRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.budgetRecyclerView.adapter = budgetAdapter
@@ -79,49 +87,14 @@ class BudgetsGoalsFragment : Fragment() {
         binding.goalRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.goalRecyclerView.adapter = goalAdapter
 
-        budgetAdapter = BudgetAdapter(
-            onCreateClick = {
-                startActivity(Intent(context, CreateNewBudgetActivity::class.java))
-            },
-            onDeleteClick = { budgetId ->
-                androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                    .setTitle("Delete Budget")
-                    .setMessage("Are you sure you want to delete this budget?")
-                    .setPositiveButton("Yes") { _, _ ->
-                        budgetViewModel.deleteBudget(budgetId)
-                    }
-                    .setNegativeButton("No", null)
-                    .show()
-            }
-        )
-        binding.budgetRecyclerView.layoutManager = LinearLayoutManager(context)
-        binding.budgetRecyclerView.adapter = budgetAdapter
-
         budgetViewModel.getBudgets(uid).observe(viewLifecycleOwner) { rawList ->
-            if (!rawList.isNullOrEmpty()) {
-                budgetViewModel.calculateBudgetProgress(rawList)
-            } else {
-                binding.cardBudgetEmpty.visibility = View.VISIBLE
-                binding.budgetRecyclerView.visibility = View.GONE
-            }
-        }
-
-        binding.createBudgetBtn.setOnClickListener {
-            startActivity(Intent(context, CreateNewBudgetActivity::class.java))
-        }
-
-        binding.createGoalBtn.setOnClickListener {
-            startActivity(Intent(context, CreateGoalActivity::class.java))
-        }
-
-        budgetViewModel.getBudgets(uid).observe(viewLifecycleOwner) { rawBudgets ->
-            if (rawBudgets.isNullOrEmpty()) {
+            if (rawList.isNullOrEmpty()) {
                 binding.cardBudgetEmpty.visibility = View.VISIBLE
                 binding.budgetRecyclerView.visibility = View.GONE
             } else {
                 binding.cardBudgetEmpty.visibility = View.GONE
                 binding.budgetRecyclerView.visibility = View.VISIBLE
-                budgetViewModel.calculateBudgetProgress(rawBudgets)
+                budgetViewModel.calculateBudgetProgress(rawList)
             }
         }
 
@@ -138,8 +111,22 @@ class BudgetsGoalsFragment : Fragment() {
             } else {
                 binding.cardGoalEmpty.visibility = View.GONE
                 binding.goalRecyclerView.visibility = View.VISIBLE
-                goalAdapter.submitList(goalList)
+                goalViewModel.calculateGoalsProgress(goalList, uid)
             }
+        }
+
+        goalViewModel.goalsWithProgress.observe(viewLifecycleOwner) { calculatedList ->
+            binding.cardGoalEmpty.visibility = View.GONE
+            binding.goalRecyclerView.visibility = View.VISIBLE
+            goalAdapter.submitList(calculatedList)
+        }
+
+        binding.createGoalBtn.setOnClickListener {
+            startActivity(Intent(context, CreateGoalActivity::class.java))
+        }
+
+        binding.createBudgetBtn.setOnClickListener {
+            startActivity(Intent(context, CreateNewBudgetActivity::class.java))
         }
     }
 

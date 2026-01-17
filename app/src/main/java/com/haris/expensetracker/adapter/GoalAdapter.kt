@@ -8,9 +8,14 @@ import com.haris.expensetracker.databinding.ItemCardBudgetBinding
 import com.haris.expensetracker.room.Goals
 import java.text.DecimalFormat
 
-class GoalAdapter : RecyclerView.Adapter<GoalAdapter.GoalViewHolder>() {
+class GoalAdapter(
+    private val onCreateClick: () -> Unit,
+    private val onDeleteClick: (Int) -> Unit
+) : RecyclerView.Adapter<GoalAdapter.GoalViewHolder>() {
 
     private var goalList = emptyList<Goals>()
+    private val decimalFormat = DecimalFormat("#,###")
+
     class GoalViewHolder(val binding: ItemCardBudgetBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GoalViewHolder {
@@ -19,33 +24,56 @@ class GoalAdapter : RecyclerView.Adapter<GoalAdapter.GoalViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: GoalViewHolder, position: Int) {
-        val currentGoal = goalList[position]
+        val goal = goalList[position]
         val binding = holder.binding
-        val decimalFormat = DecimalFormat("#,###.##")
 
-        val saved = decimalFormat.format(currentGoal.savedAmount)
-        val target = decimalFormat.format(currentGoal.targetAmount)
+        if (position == 0) {
+            binding.tvBudgetTitle.visibility = View.VISIBLE
+            binding.tvBudgetSubtitle.visibility = View.VISIBLE
+            binding.tvBudgetTitle.text = "Goals"
+            binding.tvBudgetSubtitle.text = "Track your savings progress"
+        } else {
+            binding.tvBudgetTitle.visibility = View.GONE
+            binding.tvBudgetSubtitle.visibility = View.GONE
+        }
 
-        binding.tvItemAmount.text = "$saved / $target PKR"
+        binding.btnCreateBudget.text = "Create Goal"
+        binding.btnCreateBudget.visibility = if (position == goalList.size - 1) View.VISIBLE else View.GONE
+        binding.btnCreateBudget.setOnClickListener { onCreateClick() }
 
-        binding.tvBudgetSubtitle.text = "Target Date: ${currentGoal.desiredDate}"
+        binding.tvItemName.text = goal.name
+        binding.tvSectionThisWeek.text = "Target: ${goal.desiredDate}"
 
-        binding.tvBudgetTitle.text = "Goals"
-        binding.tvBudgetSubtitle.text = "Track your savings progress"
-        binding.tvItemName.text = currentGoal.name
-
-        val progress = if (currentGoal.targetAmount > 0) {
-            ((currentGoal.savedAmount / currentGoal.targetAmount) * 100).toInt()
+        val progress = if (goal.targetAmount > 0) {
+            ((goal.savedAmount / goal.targetAmount) * 100).toInt()
         } else 0
 
-        binding.tvItemAmount.text = "${currentGoal.savedAmount} / ${currentGoal.targetAmount} PKR"
-        binding.pbBudgetProgress.progress = progress
+        val saved = decimalFormat.format(goal.savedAmount)
+        val target = decimalFormat.format(goal.targetAmount)
+        binding.tvItemAmount.text = "$saved / $target PKR -$progress%"
 
-        binding.viewStatusIndicator.setBackgroundResource(
-            if (progress >= 100) android.R.color.holo_green_dark else android.R.color.holo_blue_dark
-        )
+        binding.pbBudgetProgress.max = 100
+        binding.pbBudgetProgress.progress = if (progress > 100) 100 else progress
 
-        binding.btnCreateBudget.visibility = View.GONE
+        if (progress >= 100) {
+            binding.viewStatusIndicator.setBackgroundResource(android.R.color.holo_green_dark)
+            binding.pbBudgetProgress.progressTintList = android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#4CAF50"))
+        } else {
+            binding.viewStatusIndicator.setBackgroundResource(android.R.color.holo_blue_dark)
+            binding.pbBudgetProgress.progressTintList = android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#2196F3"))
+        }
+
+        binding.ivMenu.setOnClickListener { view ->
+            val popup = android.widget.PopupMenu(view.context, view)
+            popup.menu.add("Delete")
+            popup.setOnMenuItemClickListener { item ->
+                if (item.title == "Delete") {
+                    onDeleteClick(goal.id)
+                }
+                true
+            }
+            popup.show()
+        }
     }
 
     override fun getItemCount(): Int = goalList.size

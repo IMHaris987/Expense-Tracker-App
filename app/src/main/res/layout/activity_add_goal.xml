@@ -130,12 +130,30 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_categories"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:hint="Categories"
+                app:boxBackgroundColor="@android:color/transparent"
+                app:layout_constraintTop_toBottomOf="@id/input_desired_date">
+
+                <AutoCompleteTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:text="All" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/input_note"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:hint="Note"
-                app:layout_constraintTop_toBottomOf="@id/input_desired_date">
+                app:layout_constraintTop_toBottomOf="@id/input_categories">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
