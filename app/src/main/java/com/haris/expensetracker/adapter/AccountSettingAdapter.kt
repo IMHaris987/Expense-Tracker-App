@@ -8,7 +8,8 @@ import com.haris.expensetracker.room.Account
 
 class AccountSettingAdapter(
     private var accounts: List<Account>,
-    private val onAccountClick: (Account) -> Unit
+    private val onEditClick: (Account) -> Unit,
+    private val onDeleteClick: (Account) -> Unit
 ) : RecyclerView.Adapter<AccountSettingAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: ItemAccountSettingBinding) : RecyclerView.ViewHolder(binding.root)
@@ -30,7 +31,15 @@ class AccountSettingAdapter(
             tvAccountType.text = account.accountType
             tvAccountListBalance.text = "PKR ${String.format("%.2f", account.balance)}"
 
-            root.setOnClickListener { onAccountClick(account) }
+
+            btnDelete.setOnLongClickListener {
+                onDeleteClick(account)
+                true
+            }
+
+            btnEdit.setOnClickListener {
+                onEditClick(account)
+            }
         }
     }
 

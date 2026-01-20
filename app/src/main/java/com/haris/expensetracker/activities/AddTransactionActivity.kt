@@ -38,35 +38,25 @@ class AddTransactionActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val database = AppDatabase.getDatabase(this)
-        val dao = database.FinanceDao()
         val repository = FinanceRepository(database.FinanceDao())
         val factory = TransactionViewModelFactory(repository)
         transactionViewModel = ViewModelProvider(this, factory)[TransactionViewModel::class.java]
 
         setupTypeToggles()
+        setupCategorySpinner()
 
-        binding.tvDateDisplay.text = selectedDateString
-
-        val categories = listOf("Food", "Fuel", "Rent", "Shopping", "Salary", "Transport", "Entertainment")
-        binding.spinnerCategory.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, categories)
-
-        lifecycleScope.launch {
-            dao.getAllAccounts().collect { accounts ->
-                accountList = accounts
-                if (accounts.isNotEmpty()) {
-                    val names = accounts.map { it.name }
-                    val adapter = ArrayAdapter(
-                        this@AddTransactionActivity,
-                        android.R.layout.simple_spinner_dropdown_item,
-                        names
-                    )
-                    binding.spinnerAccount.adapter = adapter
-                    binding.spinnerTargetAccount.adapter = adapter
-                }
+        transactionViewModel.allAccounts.observe(this) { accounts ->
+            accountList = accounts
+            if (accounts.isNotEmpty()) {
+                val names = accounts.map { it.name }
+                val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, names)
+                binding.spinnerAccount.adapter = adapter
+                binding.spinnerTargetAccount.adapter = adapter
             }
         }
 
-        // 3. Close Button with Confirmation Dialog
+        binding.tvDateDisplay.text = selectedDateString
+
         binding.btnClose.setOnClickListener {
             ConfirmationDialogeHelper.showConfirmationDialog(this) {
                 finish()
@@ -74,7 +64,7 @@ class AddTransactionActivity : AppCompatActivity() {
         }
 
         binding.btnSaveTransaction.setOnClickListener {
-            saveTransaction(dao)
+            saveTransaction()
         }
 
         binding.btnPickDate.setOnClickListener {
@@ -83,6 +73,11 @@ class AddTransactionActivity : AppCompatActivity() {
                 binding.tvDateDisplay.text = date
             }
         }
+    }
+
+    private fun setupCategorySpinner() {
+        val categories = listOf("Food", "Fuel", "Rent", "Shopping", "Salary", "Transport", "Entertainment")
+        binding.spinnerCategory.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, categories)
     }
 
     private fun setupTypeToggles() {
@@ -112,7 +107,7 @@ class AddTransactionActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveTransaction(dao: FinanceDao) {
+    private fun saveTransaction() {
         val amount = binding.etAmount.text.toString().toDoubleOrNull()
         val note = binding.etNote.text.toString()
 

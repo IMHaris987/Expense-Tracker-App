@@ -15,6 +15,7 @@ import com.haris.expensetracker.utils.ConfirmationDialogeHelper
 class CreateGoalActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCreateGoalBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCreateGoalBinding.inflate(layoutInflater)

@@ -3,13 +3,15 @@ package com.haris.expensetracker.room
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 
 @Dao
 interface FinanceDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAccount(account: Account)
 
     @Query("SELECT * FROM accounts")
@@ -66,8 +68,29 @@ interface FinanceDao {
     @Query("DELETE FROM goals WHERE id = :goalId")
     suspend fun deleteGoalById(goalId: Int)
 
+    @Query("DELETE FROM accounts WHERE id = :accountId")
+    suspend fun deleteAccountById(accountId: Long)
+
     @Insert
     suspend fun insertBudget(budget: Budget)
+
+    @Query("SELECT * FROM budgets WHERE id = :id")
+    suspend fun getBudgetById(id: Long): Budget?
+
+    @Update
+    suspend fun updateBudget(budget: Budget)
+
+    @Query("SELECT * FROM goals WHERE id = :id")
+    suspend fun getGoalById(id: Long): Goals?
+
+    @Update
+    suspend fun updateGoal(goal: Goals)
+
+    @Insert
+    suspend fun insertCurrency(currency: Currency)
+
+    @Query("SELECT * FROM currencies")
+    fun getAllCurrencies(): LiveData<List<Currency>>
 
     @Query("SELECT * FROM budgets")
     fun getAllBudget(): LiveData<List<Budget>>

@@ -10,7 +10,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Calendar
-import java.util.Date
 
 class BudgetViewModel(private val repository: FinanceRepository): ViewModel() {
 
@@ -21,13 +20,26 @@ class BudgetViewModel(private val repository: FinanceRepository): ViewModel() {
         return repository.getBudgetsForUser(uid)
     }
 
+    fun getBudgetById(id: Long, onResult: (Budget?) -> Unit) {
+        viewModelScope.launch {
+            val budget = repository.getBudgetById(id)
+            onResult(budget)
+        }
+    }
+
+    fun updateBudget(budget: Budget) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateBudget(budget)
+        }
+    }
+
     fun deleteBudget(budgetId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteBudget(budgetId)
         }
     }
 
-    fun calculateBudgetProgress(rawBudgets: List<Budget>) {
+    fun calculateBudgetProgress(rawBudgets: List<Budget>, uid: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val updatedBudgets = rawBudgets.map { budget ->
                 val (start, end) = getDatesForPeriod(budget.period)

@@ -20,14 +20,25 @@ class GoalViewModel(private val finanaceRepository: FinanceRepository): ViewMode
             val updatedGoals = rawGoals.map { goal ->
                 val transactionTotal = finanaceRepository.getSavedAmount(goal.categoryName, uid) ?: 0.0
 
-                println("DEBUG: Goal: ${goal.name}, Category: ${goal.categoryName}, Found in Trans: $transactionTotal")
-
                 val totalProgress = goal.savedAmount + transactionTotal
                 goal.copy(savedAmount = totalProgress)
             }
             withContext(Dispatchers.Main) {
                 _goalsWithProgress.value = updatedGoals
             }
+        }
+    }
+
+    fun getGoalById(id: Long, onResult: (Goals?) -> Unit) {
+        viewModelScope.launch {
+            val goal = finanaceRepository.getGoalById(id)
+            onResult(goal)
+        }
+    }
+
+    fun updateGoal(goals: Goals) {
+        viewModelScope.launch(Dispatchers.IO) {
+            finanaceRepository.updateGoal(goals)
         }
     }
 
@@ -59,7 +70,6 @@ class GoalViewModel(private val finanaceRepository: FinanceRepository): ViewMode
             categoryName = categoryName,
             note = note
         )
-
         viewModelScope.launch {
             finanaceRepository.insertGoals(newGoal)
         }

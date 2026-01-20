@@ -20,6 +20,7 @@ import com.haris.expensetracker.ui.budget.BudgetViewModelFactory
 import com.haris.expensetracker.ui.goal.GoalViewModel
 import com.haris.expensetracker.ui.goal.GoalViewModelFactory
 import com.google.firebase.auth.FirebaseAuth
+import com.haris.expensetracker.activities.AddGoalActivity
 
 class BudgetsGoalsFragment : Fragment() {
 
@@ -45,7 +46,6 @@ class BudgetsGoalsFragment : Fragment() {
         val repository = FinanceRepository(database.FinanceDao())
         val budgetFactory = BudgetViewModelFactory(repository)
         val goalFactory = GoalViewModelFactory(repository)
-
         budgetViewModel = ViewModelProvider(this, budgetFactory)[BudgetViewModel::class.java]
         goalViewModel = ViewModelProvider(this, goalFactory)[GoalViewModel::class.java]
 
@@ -62,6 +62,11 @@ class BudgetsGoalsFragment : Fragment() {
                     }
                     .setNegativeButton("No", null)
                     .show()
+            },
+            onEditClick =  { budget ->
+                val intent = Intent(context, CreateNewBudgetActivity::class.java)
+                intent.putExtra("BUDGET_ID", budget.id)
+                startActivity(intent)
             }
         )
 
@@ -78,6 +83,11 @@ class BudgetsGoalsFragment : Fragment() {
                     }
                     .setNegativeButton("No", null)
                     .show()
+            },
+            onEditClick = { goalId ->
+                val intent = Intent(context, AddGoalActivity::class.java)
+                intent.putExtra("GOAL_ID", goalId.id)
+                startActivity(intent)
             }
         )
 
@@ -94,7 +104,7 @@ class BudgetsGoalsFragment : Fragment() {
             } else {
                 binding.cardBudgetEmpty.visibility = View.GONE
                 binding.budgetRecyclerView.visibility = View.VISIBLE
-                budgetViewModel.calculateBudgetProgress(rawList)
+                budgetViewModel.calculateBudgetProgress(rawList, uid)
             }
         }
 

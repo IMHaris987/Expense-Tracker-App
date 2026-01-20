@@ -58,25 +58,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupAccountObservers() {
         homeViewModel.allAccounts.observe(this) { accounts ->
-            if (!accounts.isNullOrEmpty()) {
-                accountAdapter.submitList(accounts)
-            }
-        }
-
-        // Observer for Balance
-        homeViewModel.totalBalance.observe(this) { balance ->
-            binding.tvTotalBalance.text = "Total: PKR ${String.format("%.2f", balance)}"
-        }
-
-        // Observer for Monthly Expense
-        homeViewModel.monthlyExpense.observe(this) { expense ->
-            binding.tvExpenseAmount.text = "PKR ${expense.toInt()}"
-        }
-
-        // Observer for Recent Transactions
-        // Note: Ensure your ViewModel variable is named 'recentTransactions' (plural)
-        homeViewModel.recentTransaction.observe(this) { transactions ->
-            transactionAdapter.submitList(transactions)
+            accountAdapter.submitList(accounts ?: emptyList())
         }
     }
 

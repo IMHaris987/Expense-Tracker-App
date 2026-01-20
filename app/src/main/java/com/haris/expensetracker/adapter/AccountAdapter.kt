@@ -6,8 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.haris.expensetracker.databinding.ItemAccountBinding
 import com.haris.expensetracker.room.Account
 
-class AccountAdapter(private var accountList: List<Account>) :
-    RecyclerView.Adapter<AccountAdapter.AccountViewHolder>() {
+class AccountAdapter(
+    private var accountList: List<Account>,
+) : RecyclerView.Adapter<AccountAdapter.AccountViewHolder>() {
 
     class AccountViewHolder(val binding: ItemAccountBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -18,8 +19,10 @@ class AccountAdapter(private var accountList: List<Account>) :
 
     override fun onBindViewHolder(holder: AccountViewHolder, position: Int) {
         val account = accountList[position]
-        holder.binding.tvAccountName.text = account.name
-        holder.binding.tvAccountBalance.text = "PKR ${String.format("%.2f", account.balance)}"
+        val binding= holder.binding
+
+        binding.tvAccountName.text = account.name
+        binding.tvAccountBalance.text = "PKR ${String.format("%.2f", account.balance)}"
     }
 
     override fun getItemCount() = accountList.size

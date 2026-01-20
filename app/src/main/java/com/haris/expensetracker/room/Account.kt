@@ -46,7 +46,7 @@ data class Budget(
 
 @Entity(tableName = "goals")
 data class Goals(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val userId: String,
     val name: String,
     val targetAmount: Double,
@@ -54,4 +54,13 @@ data class Goals(
     val desiredDate: String,
     val categoryName: String,
     val note: String
+)
+
+@Entity(tableName = "currencies")
+data class Currency(
+    @PrimaryKey val code: String,
+    val name: String,
+    val symbol: String,
+    val rate: Double,
+    val inverseRate: Double
 )

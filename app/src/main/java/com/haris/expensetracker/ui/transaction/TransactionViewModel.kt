@@ -9,6 +9,8 @@ import kotlinx.coroutines.launch
 
 class TransactionViewModel(private val repository: FinanceRepository) : ViewModel() {
 
+    val allAccounts = repository.allAccounts
+
     fun processNewTransaction(transaction: TransactionEntity) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.processTransaction(transaction)
