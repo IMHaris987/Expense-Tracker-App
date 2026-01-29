@@ -5,11 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.haris.expensetracker.databinding.ItemAccountSettingBinding
 import com.haris.expensetracker.room.Account
+import java.util.Collections
 
 class AccountSettingAdapter(
-    private var accounts: List<Account>,
+    private var accounts: MutableList<Account>,
     private val onEditClick: (Account) -> Unit,
-    private val onDeleteClick: (Account) -> Unit
 ) : RecyclerView.Adapter<AccountSettingAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: ItemAccountSettingBinding) : RecyclerView.ViewHolder(binding.root)
@@ -28,14 +28,7 @@ class AccountSettingAdapter(
 
         holder.binding.apply {
             tvAccountListName.text = account.name
-            tvAccountType.text = account.accountType
             tvAccountListBalance.text = "PKR ${String.format("%.2f", account.balance)}"
-
-
-            btnDelete.setOnLongClickListener {
-                onDeleteClick(account)
-                true
-            }
 
             btnEdit.setOnClickListener {
                 onEditClick(account)
@@ -46,7 +39,14 @@ class AccountSettingAdapter(
     override fun getItemCount() = accounts.size
 
     fun submitList(newList: List<Account>) {
-        accounts = newList
+        accounts = newList.toMutableList()
         notifyDataSetChanged()
     }
+
+    fun onItemMove(fromPosition: Int, toPosition: Int) {
+        java.util.Collections.swap(accounts, fromPosition, toPosition)
+        notifyItemMoved(fromPosition, toPosition)
+    }
+
+    fun getAccountAt(position: Int): Account = accounts[position]
 }

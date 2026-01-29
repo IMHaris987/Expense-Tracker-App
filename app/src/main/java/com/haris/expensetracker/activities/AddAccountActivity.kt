@@ -22,7 +22,7 @@ class AddAccountActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddAccountBinding
     private lateinit var addAccountViewModel: AddAccountViewModel
-
+    private var currentAccountId: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,31 +35,35 @@ class AddAccountActivity : AppCompatActivity() {
         val factory = AddAccountViewModelFactory(repository)
         addAccountViewModel = ViewModelProvider(this, factory)[AddAccountViewModel::class.java]
 
+        val accountId = intent.getLongExtra("account_id", -1L)
+        if (accountId != -1L) {
+            currentAccountId = accountId
+            lifecycleScope.launch {
+                val account = addAccountViewModel.getAccountById(accountId)
+                account?.let {
+                    binding.etAccountName.setText(it.name)
+                    binding.etInitialBalance.setText(it.balance.toString())
+                    binding.autoCompleteCurrency.setText(it.currency, false)
+                    binding.btnSaveAccount.text = "Update Account"
+                }
+            }
+        }
+
         binding.btnClose.setOnClickListener { finish() }
 
         binding.btnSaveAccount.setOnClickListener {
             val name = binding.etAccountName.text.toString().trim()
             val balanceStr = binding.etInitialBalance.text.toString().trim()
-            val type = binding.spinnerAccountType.text.toString()
             val selectedCurrency = binding.autoCompleteCurrency.text.toString()
 
-            if (name.isEmpty()) {
-                binding.etAccountName.error = "Please enter an account name"
-                return@setOnClickListener
-            }
-
-            if (balanceStr.isEmpty()) {
-                binding.etInitialBalance.error = "Enter initial balance"
-                return@setOnClickListener
-            }
+            if (name.isEmpty() || balanceStr.isEmpty()) return@setOnClickListener
 
             val balance = balanceStr.toDoubleOrNull() ?: 0.0
 
             val newAccount = Account(
-                id = 0,
+                id = currentAccountId,
                 name = name,
                 balance = balance,
-                accountType = type,
                 currency = selectedCurrency
             )
 

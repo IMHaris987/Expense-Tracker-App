@@ -11,8 +11,10 @@ import kotlinx.coroutines.launch
 
 class AddAccountViewModel(private var repository: FinanceRepository) : ViewModel() {
 
+    suspend fun getAccountById(id: Long): Account? {
+        return repository.getAccountById(id)
+    }
     val availableCurrencies: LiveData<List<Currency>> = repository.allCurrencies
-
     fun saveAccount(account: Account) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.insertAccount(account)

@@ -3,7 +3,6 @@ package com.haris.expensetracker.activities
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
@@ -47,6 +46,7 @@ class MainActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
             adapter = accountAdapter
         }
+
 
         setupAccountObservers()
         setupObservers()
@@ -114,11 +114,14 @@ class MainActivity : AppCompatActivity() {
             binding.drawerLayout.openDrawer(GravityCompat.START)
         }
 
-        binding.btnNotification.setOnClickListener {
-            Toast.makeText(this, "Notifications clicked", Toast.LENGTH_SHORT).show()
+        val headerView = binding.navigationView.getHeaderView(0)
+        headerView?.setOnClickListener {
+            val intent = Intent(this, ProfileActivity::class.java)
+            startActivity(intent)
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
         }
 
-        binding.btnAccountSettings.setOnClickListener {
+        binding.btnAccountSettings?.setOnClickListener {
             val intent = Intent(this, SettingActivity::class.java)
             startActivity(intent)
         }
@@ -130,6 +133,7 @@ class MainActivity : AppCompatActivity() {
                 when (tab?.position) {
                     0 -> showAccountsTab()
                     1 -> showBudgetsGoalsTab()
+                    2 -> showReportsTab()
                 }
             }
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
@@ -140,6 +144,8 @@ class MainActivity : AppCompatActivity() {
     private fun showAccountsTab() {
         binding.accounts.visibility = View.VISIBLE
         binding.fragmentContainer.visibility = View.GONE
+        binding.viewReports.visibility = View.GONE
+        binding.tvToolbarTitle.text = "Home"
     }
 
     private fun showBudgetsGoalsTab() {
@@ -165,6 +171,54 @@ class MainActivity : AppCompatActivity() {
         binding.btnAddAccountCard.setOnClickListener {
             startActivity(Intent(this, AddAccountActivity::class.java))
             closeFabMenu()
+        }
+    }
+
+    private fun showReportsTab() {
+        binding.accounts.visibility = View.GONE
+        binding.fragmentContainer.visibility = View.GONE
+        binding.viewReports.visibility = View.VISIBLE
+        binding.tvToolbarTitle.text = "Reports"
+        
+        loadChartData()
+    }
+
+    private fun loadChartData() {
+        val pieEntries = listOf(
+            com.github.mikephil.charting.data.PieEntry(40f, "Food"),
+            com.github.mikephil.charting.data.PieEntry(30f, "Rent"),
+            com.github.mikephil.charting.data.PieEntry(30f, "Gas")
+        )
+
+        val pieDataSet = com.github.mikephil.charting.data.PieDataSet(pieEntries, "Expenses")
+        pieDataSet.colors = com.github.mikephil.charting.utils.ColorTemplate.MATERIAL_COLORS.toList()
+        pieDataSet.valueTextSize = 14f
+        pieDataSet.valueTextColor = android.graphics.Color.WHITE
+
+        binding.pieChart.apply {
+            data = com.github.mikephil.charting.data.PieData(pieDataSet)
+            centerText = "Expenses"
+            setCenterTextSize(18f)
+            description.isEnabled = false
+            animateY(1000)
+            invalidate()
+        }
+
+        val incomeEntries = listOf(com.github.mikephil.charting.data.Entry(0f, 100f), com.github.mikephil.charting.data.Entry(1f, 150f))
+        val expenseEntries = listOf(com.github.mikephil.charting.data.Entry(0f, 80f), com.github.mikephil.charting.data.Entry(1f, 120f))
+
+        val incomeSet = com.github.mikephil.charting.data.LineDataSet(incomeEntries, "Income").apply {
+            color = android.graphics.Color.GREEN
+        }
+        val expenseSet = com.github.mikephil.charting.data.LineDataSet(expenseEntries, "Expenses").apply {
+            color = android.graphics.Color.RED
+        }
+
+        binding.lineChart.apply {
+            data = com.github.mikephil.charting.data.LineData(incomeSet, expenseSet)
+            description.isEnabled = false
+            animateX(1000)
+            invalidate()
         }
     }
 

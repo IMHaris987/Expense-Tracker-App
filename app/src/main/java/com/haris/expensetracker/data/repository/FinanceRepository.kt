@@ -20,12 +20,16 @@ class FinanceRepository(private val financeDao: FinanceDao) {
         financeDao.insertBudget(budget)
     }
 
+    suspend fun getAccountById(id: Long): Account? {
+        return financeDao.getAccountById(id)
+    }
+
     suspend fun insertAccount(account: Account) {
         financeDao.insertAccount(account)
     }
 
-    suspend fun processTransaction(transaction: TransactionEntity) {
-        financeDao.processTransaction(transaction)
+    suspend fun processTransaction(transaction: TransactionEntity): Boolean {
+        return financeDao.processTransaction(transaction)
     }
 
     suspend fun deleteBudget(budgetId: Int) {

@@ -12,6 +12,8 @@ import com.haris.expensetracker.data.repository.FinanceRepository
 import com.haris.expensetracker.databinding.ActivitySettingBinding
 import com.haris.expensetracker.room.Account
 import com.haris.expensetracker.room.AppDatabase
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.haris.expensetracker.ui.accountsetting.AccountSettingViewModel
 import com.haris.expensetracker.ui.accountsetting.AccountSettingViewModelFactory
 
@@ -46,18 +48,35 @@ class SettingActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         accountAdapter = AccountSettingAdapter(
-            accounts = emptyList(),
+            accounts = mutableListOf(),
             onEditClick = { account ->
                 val intent = Intent(this, AddAccountActivity::class.java)
-                intent.putExtra("account_id", account.id)
+                intent.putExtra("account_id", account.id) // Pass ID for prefilling
                 startActivity(intent)
-            },
-            onDeleteClick = { account ->
-                showDeleteDialog(account)
             }
         )
         binding.rvAllAccounts.layoutManager = LinearLayoutManager(this)
         binding.rvAllAccounts.adapter = accountAdapter
+
+        val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+            ItemTouchHelper.UP or ItemTouchHelper.DOWN, // Drag directions
+            ItemTouchHelper.LEFT // Swipe direction
+        ) {
+            override fun onMove(rv: RecyclerView, vh: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                val from = vh.adapterPosition
+                val to = target.adapterPosition
+                accountAdapter.onItemMove(from, to)
+                return true
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                val account = accountAdapter.getAccountAt(position)
+                showDeleteDialog(account)
+                accountAdapter.notifyItemChanged(position)
+            }
+        })
+        itemTouchHelper.attachToRecyclerView(binding.rvAllAccounts)
     }
 
     private fun observeAccounts() {

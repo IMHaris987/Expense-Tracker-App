@@ -14,6 +14,9 @@ interface FinanceDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAccount(account: Account)
 
+    @Query("SELECT * FROM accounts WHERE id = :id")
+    suspend fun getAccountById(id: Long): Account?
+
     @Query("SELECT * FROM accounts")
     fun getAllAccounts(): LiveData<List<Account>>
 
@@ -46,8 +49,19 @@ interface FinanceDao {
     @Query("UPDATE accounts SET balance = balance - :amount WHERE id = :id")
     suspend fun decreaseBalance(id: Long, amount: Double)
 
+    @Query("SELECT balance FROM accounts WHERE id = :accountId")
+    suspend fun getAccountBalance(accountId: Long): Double
+
     @Transaction
-    suspend fun processTransaction(transaction: TransactionEntity) {
+    suspend fun processTransaction(transaction: TransactionEntity): Boolean {
+        val currentBalance = getAccountBalance(transaction.accountId)
+
+        if (transaction.type == "Expense" || transaction.type == "Transfer") {
+            if (currentBalance < transaction.amount) {
+                return false
+            }
+        }
+
         insertTransaction(transaction)
 
         when (transaction.type) {
@@ -60,6 +74,7 @@ interface FinanceDao {
                 }
             }
         }
+        return true
     }
 
     @Query("DELETE FROM budgets WHERE id = :budgetId")

@@ -93,7 +93,7 @@ class AddTransactionActivity : AppCompatActivity() {
                     R.id.btnTypeIncome -> {
                         selectedType = "Income"
                         binding.layoutToAccount.visibility = View.GONE
-                        binding.layoutCategory.visibility = View.VISIBLE
+                        binding.layoutCategory.visibility = View.GONE
                         binding.tvFromAccountLabel.text = "Deposit To"
                     }
                     R.id.btnTypeTransfer -> {
@@ -137,21 +137,36 @@ class AddTransactionActivity : AppCompatActivity() {
         val dateObject = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(selectedDateString) ?: Date()
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
-        lifecycleScope.launch {
-            val transaction = TransactionEntity(
-                userId = uid,
-                amount = amount,
-                note = note,
-                date = dateObject,
-                type = selectedType,
-                accountId = sourceAccount.id,
-                targetAccountId = targetAccountId,
-                categoryName = categoryName
-            )
+        val transaction = TransactionEntity(
+            userId = uid,
+            amount = amount,
+            note = note,
+            date = dateObject,
+            type = selectedType,
+            accountId = sourceAccount.id,
+            targetAccountId = targetAccountId,
+            categoryName = categoryName
+        )
 
-            transactionViewModel.processNewTransaction(transaction)
-            Toast.makeText(this@AddTransactionActivity, "Saved!", Toast.LENGTH_SHORT).show()
-            finish()
+        transactionViewModel.processNewTransaction(transaction) { success ->
+            try {
+                runOnUiThread {
+                    if (success) {
+                        Toast.makeText(this, "Transaction successful", Toast.LENGTH_SHORT).show()
+                        finish()
+                    } else {
+                        Toast.makeText(
+                            this,
+                            "Error: Insufficient balance in ${sourceAccount.name}!",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            } catch (e: Exception) {
+                runOnUiThread {
+                    Toast.makeText(this@AddTransactionActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 }
